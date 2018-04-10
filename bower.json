@@ -1,0 +1,27 @@
+{
+  "name": "tewt",
+  "description": "dfg",
+  "main": "index.js",
+  "authors": [
+    "FireworksX <abeltinsh.a@icloud.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/libs",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "Ionicons": "ionicons#^2.0.1",
+    "Snap.svg": "snap.svg#^0.5.1",
+    "bootstrap": "v4.0.0-beta",
+    "slick-carousel": "^1.8.1",
+    "velocity": "^1.5.1",
+    "vue": "^2.5.16"
+  }
+}
