@@ -3,7 +3,7 @@
         #form__overlay
         .form__progress(:style="{ width: widthProgress }")
         .form-register
-            .form-register__body.animated(:class="{ shake: isMistakeNext }")
+            .form-register__body.animated(:class="{ shake: isMistakeNext,  done: isDone}")
                 i.ion-android-arrow-forward.form__btn(@click="next" v-if="step !== 4" v-bind:class="{ next_wrong: isMistake }")
                 .form__container(v-if="step !== countStep")
                     .form__caption(v-bind:class="{ form__caption_active: isActive }") {{ questions[step] }}
@@ -45,6 +45,7 @@
                 isActive: false,
                 isMistake: false,
                 isMistakeNext: false,
+                isDone: false,
                 widthProgress: '50%',
                 step: 0,
                 countStep: 4,
@@ -114,6 +115,12 @@
             },
             next () {
                 if(this.isMistake == false){
+                    this.isDone = true;
+
+                    setTimeout( () => {
+                        this.isDone = false;
+                    }, 1000);
+
                     this.isMistake = false;
                     this.isActive = false;
                     this.step = this.step + 1;
@@ -184,8 +191,8 @@
         -moz-box-shadow: 0px 3px 30px 0px rgba(50, 50, 50, 0.7)
         box-shadow: 0px 3px 30px 0px rgba(50, 50, 50, 0.7)
 
-    .form-register__body_done
-        animation: done .5s
+    .done
+        animation: done .2s
 
     @keyframes done
         0%
@@ -242,42 +249,6 @@
 
     /* Check */
 
-    .form-register__check
-        padding: 10px
-        width: 50%
-        margin: 0 auto
-
-    .form-register__head
-        font-weight: 400
-        font-size: 20px
-        margin-bottom: 15px
-        text-align: center
-
-    .form-register__name
-        font-weight: 700
-
-    .form-register__line
-        display: flex
-        margin-bottom: 15px
-        justify-content: space-between
-        align-items: center
-
-    .form-register__col1
-        font-size: 18px
-
-    .form-register_wrong
-        font-size: 18px
-        color: #e36d69
-
-    .form-register_success
-        font-size: 18px
-        color: #0de3b3
-    
-    .next_wrong
-        color: #e36d69
-
-    .line_wrong
-        background: #e36d69
 
     .form-register__response
         padding: 15px
