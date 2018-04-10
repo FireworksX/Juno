@@ -46,15 +46,28 @@ var User = function () {
                     }
 
                     if (_typeof(result[0]) === 'object') {
-                        reject({ code: 452 });
+                        reject({ code: 452, text: '\u041B\u043E\u0433\u0438\u043D ' + obj.login + ' \u0443\u0436\u0435 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F' });
                     } else {
-                        newUser.save(function (err) {
+
+                        regSchema.find({
+                            mail: obj.mail
+                        }, function (err, checkmail) {
                             if (err) {
-                                reject({ code: 451 });
                                 throw err;
                             }
+                            console.log(checkmail);
+                            if (_typeof(checkmail[0]) === 'object') {
+                                reject({ code: 453, text: 'Данная почта уже используется' });
+                            }
 
-                            resolve({ code: 201 });
+                            newUser.save(function (err) {
+                                if (err) {
+                                    reject({ code: 451, text: 'Техническая ошибка' });
+                                    throw err;
+                                }
+
+                                resolve({ code: 201, text: obj.name + ', \u0434\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C!' });
+                            });
                         });
                     }
                 });

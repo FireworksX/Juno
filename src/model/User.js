@@ -32,16 +32,31 @@ class User {
                 }
 
                 if(typeof result[0] === 'object'){
-                    reject({code: 452});
+                    reject({code: 452, text: `Логин ${obj.login} уже используется`});
                 }else{
-                    newUser.save( (err) => {
+
+                    regSchema.find({
+                        mail: obj.mail
+                    }, (err, checkmail) => {
                         if(err){
-                            reject({code: 451});
                             throw err;
                         }
+                        console.log(checkmail)
+                        if(typeof checkmail[0] === 'object'){
+                            reject({code: 453, text: 'Данная почта уже используется'})
+                        }
 
-                        resolve({code: 201});
-                    })
+                        newUser.save( (err) => {
+                            if(err){
+                                reject({code: 451, text: 'Техническая ошибка'});
+                                throw err;
+                            }
+
+                            resolve({code: 201, text: `${obj.name}, добро пожаловать!`});
+                        })
+
+                    });
+
                 }
             });
 

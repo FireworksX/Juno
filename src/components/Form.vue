@@ -3,41 +3,17 @@
         #form__overlay
         .form__progress(:style="{ width: widthProgress }")
         .form-register
-            .form-register__body
-                i.ion-android-arrow-forward.form__btn(@click="next" v-if="step !== 4")
-                .form__container(v-if="step !== 4")
+            .form-register__body.animated(:class="{ shake: isMistakeNext }")
+                i.ion-android-arrow-forward.form__btn(@click="next" v-if="step !== 4" v-bind:class="{ next_wrong: isMistake }")
+                .form__container(v-if="step !== countStep")
                     .form__caption(v-bind:class="{ form__caption_active: isActive }") {{ questions[step] }}
                     input.form__input(type="text" v-model="personalData.name" v-if="step === 0" )(@input="checkInputName")
                     input.form__input(type="text" v-model="personalData.login" v-if="step === 1")(@input="checkInputLogin")
                     input.form__input(type="text" v-model="personalData.mail" v-if="step === 2")(@input="checkInputMail")
                     input.form__input(type="password" v-model="personalData.pass" v-if="step === 3")(@input="checkInputPass")
-                    .form__line
-                .form-register__check(v-if="step === 4")
-                    h3.form-register__head Проверяем..
-                    .form-register__line
-                        .form-register__col1 Имя
-                        .form-register__col2
-                            img(src="images/tail-spin.svg" v-if="dataRequest.name === 'load'")
-                            i.ion-ios-close.form-register_wrong(v-else-if="dataRequest.name === 'wrong'")
-                            i.ion-ios-checkmark.form-register_success(v-else)
-                    .form-register__line
-                        .form-register__col1 Логин
-                        .form-register__col2
-                            img(src="images/tail-spin.svg" v-if="dataRequest.login === 'load'")
-                            i.ion-ios-close.form-register_wrong(v-else-if="dataRequest.login === 'wrong'")
-                            i.ion-ios-checkmark.form-register_success(v-else)
-                    .form-register__line
-                        .form-register__col1 Почта
-                        .form-register__col2
-                            img(src="images/tail-spin.svg" v-if="dataRequest.mail === 'load'")
-                            i.ion-ios-close.form-register_wrong(v-else-if="dataRequest.mail === 'wrong'")
-                            i.ion-ios-checkmark.form-register_success(v-else)
-                    .form-register__line
-                        .form-register__col1 Пароль
-                        .form-register__col2
-                            img(src="images/tail-spin.svg" v-if="dataRequest.pass === 'load'")
-                            i.ion-ios-close.form-register_wrong(v-else-if="dataRequest.pass === 'wrong'")
-                            i.ion-ios-checkmark.form-register_success(v-else)
+                    .form__line(v-bind:class="{ line_wrong: isMistake }")
+                .form-register__response(v-if="step === countStep") {{ this.response.text }}
+                    .form-register__continue(v-if="this.response.code === 201") Продолжить
 
 </template>
 
@@ -66,16 +42,16 @@
                     mail: '',
                     pass: ''
                 },
-                dataRequest: {
-                    name: 'load',
-                    login: 'success',
-                    mail: 'wrong',
-                    pass: 'success'
-                },
                 isActive: false,
+                isMistake: false,
+                isMistakeNext: false,
                 widthProgress: '50%',
                 step: 0,
-                countStep: 4
+                countStep: 4,
+                response: {
+                    code: null,
+                    text: ''
+                }
             }
         },
         methods: {
@@ -83,17 +59,31 @@
                 this.widthProgress = `${this.step / this.countStep * 100}%`
             },
             checkInputName () {
+
                 if (this.personalData.name === '') {
                     this.isActive = false;
                 } else {
                     this.isActive = true;
                 }
+
+                if(/^[a-zA-ZА-Яа-я]+$/.test(this.personalData.name) !== true || this.personalData.name === ''){
+                    this.isMistake = true;
+                }else{
+                    this.isMistake = false;
+                }
+
             },
             checkInputLogin () {
                 if (this.personalData.login === '') {
                     this.isActive = false;
                 } else {
                     this.isActive = true;
+                }
+
+                if(/^[a-zA-Z0-9]+$/.test(this.personalData.login) !== true){
+                    this.isMistake = true;
+                }else{
+                    this.isMistake = false;
                 }
             },
             checkInputMail () {
@@ -102,6 +92,12 @@
                 } else {
                     this.isActive = true;
                 }
+
+                if(/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(this.personalData.mail) !== true){
+                    this.isMistake = true;
+                }else{
+                    this.isMistake = false;
+                }
             },
             checkInputPass () {
                 if (this.personalData.pass === '') {
@@ -109,17 +105,33 @@
                 } else {
                     this.isActive = true;
                 }
+
+                if(this.personalData.pass === ''){
+                    this.isMistake = true;
+                }else{
+                    this.isMistake = false;
+                }
             },
             next () {
-                this.isActive = false;
-                this.step = this.step + 1;
-                if(this.step === this.questions.length){
-                    this.register()
+                if(this.isMistake == false){
+                    this.isMistake = false;
+                    this.isActive = false;
+                    this.step = this.step + 1;
+                    if(this.step === this.questions.length){
+                        this.register()
+                    }
+                    this.setProgress();
+                }else{
+                    this.isMistakeNext = true;
+                    setTimeout( () => {
+                        this.isMistakeNext = false;
+                    }, 1000)
                 }
-                this.setProgress();
             },
             register () {
                 this.$http.post("http://localhost:2000/register", this.personalData, {emulateJSON: true}).then( (res) => {
+                    this.response = res.data;
+                    console.log(this.response);
                     console.log(res);
                 }, (err) => {
                     console.log(err);
@@ -168,6 +180,21 @@
         width: 410px
         position: relative
         z-index: 10
+        -webkit-box-shadow: 0px 3px 30px 0px rgba(50, 50, 50, 0.7)
+        -moz-box-shadow: 0px 3px 30px 0px rgba(50, 50, 50, 0.7)
+        box-shadow: 0px 3px 30px 0px rgba(50, 50, 50, 0.7)
+
+    .form-register__body_done
+        animation: done .5s
+
+    @keyframes done
+        0%
+            transform: translateY(0)
+        50%
+            transform: translateY(10px)
+        100%
+            transform: translateY(0)
+
 
     .form__container
         //padding: 25px 65px 0 0
@@ -221,10 +248,13 @@
         margin: 0 auto
 
     .form-register__head
-        font-weight: 700
+        font-weight: 400
         font-size: 20px
         margin-bottom: 15px
         text-align: center
+
+    .form-register__name
+        font-weight: 700
 
     .form-register__line
         display: flex
@@ -242,5 +272,32 @@
     .form-register_success
         font-size: 18px
         color: #0de3b3
+    
+    .next_wrong
+        color: #e36d69
+
+    .line_wrong
+        background: #e36d69
+
+    .form-register__response
+        padding: 15px
+        font-size: 20px
+        font-weight: 700
+        text-align: center
+
+    .form-register__continue
+        padding: 10px 15px
+        background: #5f89d7
+        font-size: 20px
+        font-weight: 700
+        cursor: pointer
+        color: #ffffff
+        display: inline-block
+        margin-top: 30px
+        -webkit-border-radius: 7px
+        -moz-border-radius: 7px
+        border-radius: 7px
+        &:hover
+            background: #4875ca
 
 </style>
