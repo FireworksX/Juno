@@ -43,9 +43,12 @@
 
 <script>
     import 'particles.js'
+    import Vue from 'vue'
+    import VueResource from 'vue-resource'
 
     particlesJS.load('form__overlay', 'particlesjs-config.json', () => console.log('Particles enabled'));
 
+    Vue.use(VueResource);
 
     export default {
         props: ['title'],
@@ -110,8 +113,17 @@
             next () {
                 this.isActive = false;
                 this.step = this.step + 1;
+                if(this.step === this.questions.length){
+                    this.register()
+                }
                 this.setProgress();
-                console.log(this.step)
+            },
+            register () {
+                this.$http.post("http://localhost:2000/register", this.personalData, {emulateJSON: true}).then( (res) => {
+                    console.log(res);
+                }, (err) => {
+                    console.log(err);
+                });
             }
         },
         mounted () {
