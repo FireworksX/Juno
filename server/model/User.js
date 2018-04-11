@@ -46,7 +46,7 @@ var User = function () {
                     }
 
                     if (_typeof(result[0]) === 'object') {
-                        reject({ code: 452, text: '\u041B\u043E\u0433\u0438\u043D ' + obj.login + ' \u0443\u0436\u0435 \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F' });
+                        reject({ code: 452, type: 'failed', text: '\u041B\u043E\u0433\u0438\u043D ' + obj.login + ' \u0443\u0436\u0435 \u043A\u0435\u043C-\u0442\u043E \u0437\u0430\u043D\u044F\u0442. \u041C\u044B \u043F\u043E\u043D\u0438\u043C\u0430\u0435\u043C \u0447\u0442\u043E \u044D\u0442\u043E \u043A\u0440\u0443\u0442\u043E\u0439 \u043D\u0438\u043A\u043D\u0435\u0439\u043C, \u043D\u043E \u0412\u0430\u043C \u043F\u0440\u0438\u0434\u0451\u0442\u0441\u044F \u0432\u044B\u0431\u0440\u0430\u0442\u044C \u0434\u0440\u0443\u0433\u043E\u0439.' });
                     } else {
 
                         regSchema.find({
@@ -57,16 +57,16 @@ var User = function () {
                             }
                             console.log(checkmail);
                             if (_typeof(checkmail[0]) === 'object') {
-                                reject({ code: 453, text: 'Данная почта уже используется' });
+                                reject({ code: 453, type: 'failed', text: '\u041F\u043E\u0447\u0442\u0430 ' + obj.mail + ' \u0443\u0436\u0435 \u043A\u0435\u043C-\u0442\u043E \u0438\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0435\u0442\u0441\u044F, \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u0443\u043A\u0430\u0437\u0430\u0442\u044C \u0434\u0443\u0433\u043E\u0439 \u0430\u0434\u0440\u0435\u0441 \u044D\u043B\u0435\u043A\u0442\u0440\u043E\u043D\u043D\u043E\u0439 \u043F\u043E\u0447\u0442\u044B.' });
                             }
 
                             newUser.save(function (err) {
                                 if (err) {
-                                    reject({ code: 451, text: 'Техническая ошибка' });
+                                    reject({ code: 451, type: 'failed', text: 'Извените, это техническая ошибка, мы уже работаем над испралением ситуации.' });
                                     throw err;
                                 }
 
-                                resolve({ code: 201, text: obj.name + ', \u0434\u043E\u0431\u0440\u043E \u043F\u043E\u0436\u0430\u043B\u043E\u0432\u0430\u0442\u044C!' });
+                                resolve({ code: 201, type: 'success', text: obj.name + ' \u0443\u0441\u043F\u0435\u0448\u043D\u043E \u0437\u0430\u0440\u0435\u0433\u0438\u0441\u0442\u0440\u0438\u0440\u043E\u0432\u0430\u043D \u043F\u043E\u0434 \u043D\u0438\u043A\u043E\u043C ' + obj.login + '. \u041C\u044B \u0440\u0430\u0434\u044B \u0432\u0438\u0434\u0435\u0442\u044C \u0442\u0435\u0431\u044F \u0432 \u043D\u0430\u0448\u0435\u0439 \u043A\u043E\u043C\u0430\u043D\u0434\u0435. \u0416\u0435\u043B\u0430\u0435\u043C \u0443\u0434\u0430\u0447\u0438!' });
                             });
                         });
                     }

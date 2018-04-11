@@ -1,19 +1,35 @@
 <template lang="pug">
     .form
         #form__overlay
-        .form__progress(:style="{ width: widthProgress }")
-        .form-register
-            .form-register__body.animated(:class="{ shake: isMistakeNext,  done: isDone}")
-                i.ion-android-arrow-forward.form__btn(@click="next" v-if="step !== 4" v-bind:class="{ next_wrong: isMistake }")
-                .form__container(v-if="step !== countStep")
-                    .form__caption(v-bind:class="{ form__caption_active: isActive }") {{ questions[step] }}
-                    input.form__input(type="text" v-model="personalData.name" v-if="step === 0" )(@input="checkInputName")
-                    input.form__input(type="text" v-model="personalData.login" v-if="step === 1")(@input="checkInputLogin")
-                    input.form__input(type="text" v-model="personalData.mail" v-if="step === 2")(@input="checkInputMail")
-                    input.form__input(type="password" v-model="personalData.pass" v-if="step === 3")(@input="checkInputPass")
-                    .form__line(v-bind:class="{ line_wrong: isMistake }")
-                .form-register__response(v-if="step === countStep") {{ this.response.text }}
-                    .form-register__continue(v-if="this.response.code === 201") Продолжить
+        .form__progress(:style="{ width: progress }")
+        .form-register(v-if="registration.enabled")
+            .form-register__body.animated(:class="{ shake: registration.isMistakeNext,  done: registration.isDone}")
+                i.ion-android-arrow-forward.form__btn(@click="next" v-if="registration.step !== 4")
+                .form__container(v-if="registration.step !== registration.countStep")
+                    .form__caption(v-bind:class="{ form__caption_active: registration.isActive }") {{ registration.questions[registration.step] }}
+                    input.form__input(type="text" v-model="personalData.name" v-if="registration.step === 0" )(@input="_checkInputName")
+                    input.form__input(type="text" v-model="personalData.login" v-if="registration.step === 1")(@input="_checkInputLogin")
+                    input.form__input(type="text" v-model="personalData.mail" v-if="registration.step === 2")(@input="_checkInputMail")
+                    input.form__input(type="password" v-model="personalData.pass" v-if="registration.step === 3")(@input="_checkInputPass")
+                    .form__line
+        .form-auth(v-if="auth.enabled")
+            .form-register__body.animated(:class="{ shake: auth.isMistakeNext,  done: auth.isDone}")
+                i.ion-android-arrow-forward.form__btn(@click="next" v-if="auth.step !== auth.countStep")
+                .form__container(v-if="auth.step !== auth.countStep")
+                    .form__caption(v-bind:class="{ form__caption_active: auth.isActive }") {{ auth.questions[auth.step] }}
+                    input.form__input(type="text" v-model="personalData.login" v-if="auth.step === 1")(@input="_checkInputLogin")
+                    input.form__input(type="password" v-model="personalData.pass" v-if="auth.step === 3")(@input="_checkInputPass")
+                    .form__line
+        .form-alert(v-if="alert.enabled")
+            .form-alert__body
+                .form-alert__overlay(:style="{ background: alert[alert.type].color }")
+                img(:src="alert[alert.type].image").form-alert__img
+                .form-alert__container
+                    img(src="images/wave.png").form-alert__wave
+                    .form-alert__head {{ alert[alert.type].head }}
+                    p.form-alert__desc {{ alert.text }}
+                    .form-alert__btn {{ alert[alert.type].btnText }}
+
 
 </template>
 
@@ -21,6 +37,7 @@
     import 'particles.js'
     import Vue from 'vue'
     import VueResource from 'vue-resource'
+    import SHA256 from 'crypto-js/sha256'
 
     particlesJS.load('form__overlay', 'particlesjs-config.json', () => console.log('Particles enabled'));
 
@@ -30,131 +47,176 @@
         props: ['title'],
         data () {
             return {
-                questions: [
-                    'Какое твоё имя?',
-                    'Какой хочешь логин?',
-                    'Какая твоя почта?',
-                    'Придумай пароль'
-                ],
+                registration: {
+                    enabled: false,
+                    questions: [
+                        'Какое твоё имя?',
+                        'Какой хочешь логин?',
+                        'Какая твоя почта?',
+                        'Придумай пароль'
+                    ],
+                    isActive: false,
+                    isMistake: false,
+                    isMistakeNext: false,
+                    isDone: false,
+                    step: 0,
+                    countStep: 4,
+                },
+                auth: {
+                    enabled: true,
+                    questions: [
+                        'Логин',
+                        'Пароль'
+                    ],
+                    isActive: false,
+                    isMistake: false,
+                    isMistakeNext: false,
+                    isDone: false,
+                    step: 0,
+                    countStep: 2,
+                },
                 personalData: {
                     name: '',
                     login: '',
                     mail: '',
                     pass: ''
                 },
-                isActive: false,
-                isMistake: false,
-                isMistakeNext: false,
-                isDone: false,
-                widthProgress: '50%',
-                step: 0,
-                countStep: 4,
+                widthProgress: '0%',
                 response: {
+                    type: '',
                     code: null,
                     text: ''
+                },
+                alert: {
+                    enabled: false,
+                    type: 'success',
+                    text: '',
+                    failed: {
+                        head: 'Упс! Ошибочка...',
+                        color: '#f89da8',
+                        image: 'images/failed.png',
+                        btnText: 'Попробовать снова'
+                    },
+                    success: {
+                        head: 'Замечательно!',
+                        color: '#82eac5',
+                        image: 'images/success.png',
+                        btnText: 'Продолжить'
+                    }
                 }
             }
         },
-        methods: {
-            setProgress () {
-                this.widthProgress = `${this.step / this.countStep * 100}%`
+        computed: {
+            progress () {
+                return `${this.registration.step / this.registration.countStep * 100}%`;
             },
-            checkInputName () {
+        },
+        methods: {
+            _checkInputName () {
 
                 if (this.personalData.name === '') {
-                    this.isActive = false;
+                    this.registration.isActive = false;
                 } else {
-                    this.isActive = true;
+                    this.registration.isActive = true;
                 }
 
                 if(/^[a-zA-ZА-Яа-я]+$/.test(this.personalData.name) !== true || this.personalData.name === ''){
-                    this.isMistake = true;
+                    this.registration.isMistake = true;
                 }else{
-                    this.isMistake = false;
+                    this.registration.isMistake = false;
                 }
 
             },
-            checkInputLogin () {
+            _checkInputLogin () {
                 if (this.personalData.login === '') {
-                    this.isActive = false;
+                    this.registration.isActive = false;
                 } else {
-                    this.isActive = true;
+                    this.registration.isActive = true;
                 }
 
                 if(/^[a-zA-Z0-9]+$/.test(this.personalData.login) !== true){
-                    this.isMistake = true;
+                    this.registration.isMistake = true;
                 }else{
-                    this.isMistake = false;
+                    this.registration.isMistake = false;
                 }
             },
-            checkInputMail () {
+            _checkInputMail () {
                 if (this.personalData.mail === '') {
-                    this.isActive = false;
+                    this.registration.isActive = false;
                 } else {
-                    this.isActive = true;
+                    this.registration.isActive = true;
                 }
 
                 if(/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(this.personalData.mail) !== true){
-                    this.isMistake = true;
+                    this.registration.isMistake = true;
                 }else{
-                    this.isMistake = false;
+                    this.registration.isMistake = false;
                 }
             },
-            checkInputPass () {
+            _checkInputPass () {
                 if (this.personalData.pass === '') {
-                    this.isActive = false;
+                    this.registration.isActive = false;
                 } else {
-                    this.isActive = true;
+                    this.registration.isActive = true;
                 }
 
                 if(this.personalData.pass === ''){
-                    this.isMistake = true;
+                    this.registration.isMistake = true;
                 }else{
-                    this.isMistake = false;
+                    this.registration.isMistake = false;
                 }
             },
             next () {
-                if(this.isMistake == false){
-                    this.isDone = true;
+                if(this.registration.isMistake == false){
+                    this.registration.isDone = true;
 
                     setTimeout( () => {
-                        this.isDone = false;
+                        this.registration.isDone = false;
                     }, 1000);
 
-                    this.isMistake = false;
-                    this.isActive = false;
-                    this.step = this.step + 1;
-                    if(this.step === this.questions.length){
+                    this.registration.isMistake = false;
+                    this.registration.isActive = false;
+                    this.registration.step = this.registration.step + 1;
+                    if(this.registration.step === this.registration.questions.length){
                         this.register()
                     }
-                    this.setProgress();
                 }else{
-                    this.isMistakeNext = true;
+                    this.registration.isMistakeNext = true;
                     setTimeout( () => {
-                        this.isMistakeNext = false;
+                        this.registration.isMistakeNext = false;
                     }, 1000)
                 }
             },
+            encpypt (arg) {
+                let array = SHA256(this.personalData[arg]).words;
+                var code = '';
+                for( let key of array){
+                    code += `${String(key)}?`
+                }
+                return btoa(code);
+            },
             register () {
+                this.personalData.pass = this.encpypt('pass');
                 this.$http.post("http://localhost:2000/register", this.personalData, {emulateJSON: true}).then( (res) => {
                     this.response = res.data;
-                    console.log(this.response);
+                    this.alert.type = res.data.type;
+                    this.alert.text = res.data.text;
+                    this.alert.enabled = true;
+                    this.registration.enabled = false;
+                    console.log(this.personalData);
                     console.log(res);
                 }, (err) => {
                     console.log(err);
                 });
             }
         },
-        mounted () {
-            this.setProgress();
-        }
     }
 </script>
 
 <style lang="sass">
 
     .form
-        background: #5f89d7
+        background: #e4f0ff
         width: 100%
         height: 100vh
         z-index: 0
@@ -174,7 +236,7 @@
     .form__progress
         width: 25%
         height: 100%
-        background: #4875ca
+        background: #d6e2f1
         position: absolute
         left: 0
         top: 0
@@ -187,9 +249,12 @@
         width: 410px
         position: relative
         z-index: 10
-        -webkit-box-shadow: 0px 3px 30px 0px rgba(50, 50, 50, 0.7)
-        -moz-box-shadow: 0px 3px 30px 0px rgba(50, 50, 50, 0.7)
-        box-shadow: 0px 3px 30px 0px rgba(50, 50, 50, 0.7)
+        -webkit-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
+        -moz-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
+        box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
+        -webkit-border-radius: 5px
+        -moz-border-radius: 5px
+        border-radius: 5px
 
     .done
         animation: done .2s
@@ -250,25 +315,101 @@
     /* Check */
 
 
-    .form-register__response
+    .form-register__title
         padding: 15px
         font-size: 20px
         font-weight: 700
         text-align: center
 
-    .form-register__continue
-        padding: 10px 15px
-        background: #5f89d7
-        font-size: 20px
-        font-weight: 700
-        cursor: pointer
-        color: #ffffff
-        display: inline-block
-        margin-top: 30px
+    /* Alert */
+
+    .form-alert
+        width: 400px
+        background: #ffffff
         -webkit-border-radius: 7px
         -moz-border-radius: 7px
         border-radius: 7px
+        overflow: hidden
+        -webkit-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
+        -moz-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
+        box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
+
+    .form-alert__body
+        position: relative
+
+    .form-alert__img
+        width: 400px
+        z-index: 5
+        position: relative
+
+    .form-alert__overlay
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        background: #f89da8
+        z-index: 4
+
+    .form-alert__container
+        padding: 15px 20px 20px 20px
+        background: #fff
+        position: relative
+        z-index: 6
+        text-align: center
+        font-family: 'Montserrat', sans-serif
+
+    .form-alert__wave
+        width: 100%
+        position: absolute
+        top: -30px
+        left: 0
+
+    .form-alert__head
+        font-weight: 700
+        font-size: 24px
+        color: #244555
+        position: relative
+        margin-bottom: 30px
+        display: inline-block
+        &:after
+            content: ' '
+            width: 50px
+            height: 4px
+            -webkit-border-radius: 5px
+            -moz-border-radius: 5px
+            border-radius: 5px
+            background: #c1cbcf
+            position: absolute
+            left: 50%
+            margin-left: -25px
+            bottom: -10px
+
+    .form-alert__desc
+        font-weight: 400
+        color: #244555
+        padding: 0 15px
+        margin-bottom: 30px
+        line-height: 25px
+    
+    .form-alert__btn
+        font-weight: 400
+        padding: 15px 30px
+        font-size: 14px
+        background: #a3c6f1
+        text-transform: uppercase
+        display: inline-block
+        color: #fff
+        -webkit-border-radius: 5px
+        -moz-border-radius: 5px
+        border-radius: 5px
+        -webkit-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
+        -moz-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
+        box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
+        cursor: pointer
+        transition: background .3s
         &:hover
-            background: #4875ca
+            background: #88a8d3
+
 
 </style>

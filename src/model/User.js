@@ -32,7 +32,7 @@ class User {
                 }
 
                 if(typeof result[0] === 'object'){
-                    reject({code: 452, text: `Логин ${obj.login} уже используется`});
+                    reject({code: 452,type: 'failed', text: `Логин ${obj.login} уже кем-то занят. Мы понимаем что это крутой никнейм, но Вам придётся выбрать другой.`});
                 }else{
 
                     regSchema.find({
@@ -43,16 +43,16 @@ class User {
                         }
                         console.log(checkmail)
                         if(typeof checkmail[0] === 'object'){
-                            reject({code: 453, text: 'Данная почта уже используется'})
+                            reject({code: 453,type: 'failed', text: `Почта ${obj.mail} уже кем-то используется, попробуйте указать дугой адрес электронной почты.`})
                         }
 
                         newUser.save( (err) => {
                             if(err){
-                                reject({code: 451, text: 'Техническая ошибка'});
+                                reject({code: 451,type: 'failed', text: 'Извените, это техническая ошибка, мы уже работаем над испралением ситуации.'});
                                 throw err;
                             }
 
-                            resolve({code: 201, text: `${obj.name}, добро пожаловать!`});
+                            resolve({code: 201,type: 'success', text: `${obj.name} успешно зарегистрирован под ником ${obj.login}. Мы рады видеть тебя в нашей команде. Желаем удачи!`});
                         })
 
                     });
