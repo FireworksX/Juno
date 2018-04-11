@@ -22,5 +22,9 @@ router.post('/register', urlencoded, (req, res) => {
     })
 });
 
+router.post('/auth', urlencoded, (req, res) => {
+    res.send({code: 451,type: 'failed', text: 'Извените, это техническая ошибка, мы уже работаем над испралением ситуации.'});
+});
+
 
 module.exports = router;

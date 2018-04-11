@@ -2,23 +2,23 @@
     .form
         #form__overlay
         .form__progress(:style="{ width: progress }")
-        .form-register(v-if="registration.enabled")
-            .form-register__body.animated(:class="{ shake: registration.isMistakeNext,  done: registration.isDone}")
-                i.ion-android-arrow-forward.form__btn(@click="next" v-if="registration.step !== 4")
-                .form__container(v-if="registration.step !== registration.countStep")
-                    .form__caption(v-bind:class="{ form__caption_active: registration.isActive }") {{ registration.questions[registration.step] }}
-                    input.form__input(type="text" v-model="personalData.name" v-if="registration.step === 0" )(@input="_checkInputName")
-                    input.form__input(type="text" v-model="personalData.login" v-if="registration.step === 1")(@input="_checkInputLogin")
-                    input.form__input(type="text" v-model="personalData.mail" v-if="registration.step === 2")(@input="_checkInputMail")
-                    input.form__input(type="password" v-model="personalData.pass" v-if="registration.step === 3")(@input="_checkInputPass")
+        .form-register(v-if="register.enabled")
+            .form-register__body.animated(:class="{ shake: inputs.isMistakeNext,  done: inputs.isDone}")
+                i.ion-android-arrow-forward.form__btn(@click="next" v-if="register.step !== 4")
+                .form__container
+                    .form__caption(v-bind:class="{ form__caption_active: register.isActive }") {{ register.questions[inputs.step] }}
+                    input.form__input(type="text" v-model="personalData.name" v-if="inputs.step === 0" )(@input="_checkInputName")
+                    input.form__input(type="text" v-model="personalData.login" v-if="inputs.step === 1")(@input="_checkInputLogin")
+                    input.form__input(type="text" v-model="personalData.mail" v-if="inputs.step === 2")(@input="_checkInputMail")
+                    input.form__input(type="password" v-model="personalData.pass" v-if="inputs.step === 3")(@input="_checkInputPass")
                     .form__line
         .form-auth(v-if="auth.enabled")
-            .form-register__body.animated(:class="{ shake: auth.isMistakeNext,  done: auth.isDone}")
-                i.ion-android-arrow-forward.form__btn(@click="next" v-if="auth.step !== auth.countStep")
-                .form__container(v-if="auth.step !== auth.countStep")
-                    .form__caption(v-bind:class="{ form__caption_active: auth.isActive }") {{ auth.questions[auth.step] }}
-                    input.form__input(type="text" v-model="personalData.login" v-if="auth.step === 1")(@input="_checkInputLogin")
-                    input.form__input(type="password" v-model="personalData.pass" v-if="auth.step === 3")(@input="_checkInputPass")
+            .form-register__body.animated(:class="{ shake: inputs.isMistakeNext,  done: inputs.isDone}")
+                i.ion-android-arrow-forward.form__btn(@click="next" v-if="inputs.step !== inputs.countStep")
+                .form__container
+                    .form__caption(v-bind:class="{ form__caption_active: inputs.isActive }") {{ auth.questions[inputs.step] }}
+                    input.form__input(type="text" v-model="personalData.login" v-if="inputs.step === 0")(@input="_checkInputLogin")
+                    input.form__input(type="password" v-model="personalData.pass" v-if="inputs.step === 1")(@input="_checkInputPass")
                     .form__line
         .form-alert(v-if="alert.enabled")
             .form-alert__body
@@ -47,33 +47,30 @@
         props: ['title'],
         data () {
             return {
-                registration: {
+                type: 'auth',
+                register: {
                     enabled: false,
                     questions: [
                         'Какое твоё имя?',
                         'Какой хочешь логин?',
                         'Какая твоя почта?',
                         'Придумай пароль'
-                    ],
-                    isActive: false,
-                    isMistake: false,
-                    isMistakeNext: false,
-                    isDone: false,
-                    step: 0,
-                    countStep: 4,
+                    ]
                 },
                 auth: {
-                    enabled: true,
+                    enabled: false,
                     questions: [
                         'Логин',
                         'Пароль'
-                    ],
+                    ]
+                },
+                inputs: {
                     isActive: false,
                     isMistake: false,
                     isMistakeNext: false,
                     isDone: false,
                     step: 0,
-                    countStep: 2,
+                    countStep: 0,//this[this.type].questions.length
                 },
                 personalData: {
                     name: '',
@@ -108,86 +105,102 @@
         },
         computed: {
             progress () {
-                return `${this.registration.step / this.registration.countStep * 100}%`;
-            },
+                return `${this.inputs.step / this.inputs.countStep * 100}%`;
+            }
         },
         methods: {
+            formInit() {
+                if(this.type === 'register'){
+                    this.inputs.countStep = 4;
+                    this.auth.enabled = false;
+                    this.register.enabled = true;
+                }
+                if(this.type === 'auth'){
+                    this.inputs.countStep = 2;
+                    this.register.enabled = false;
+                    this.auth.enabled = true;
+                }
+            },
             _checkInputName () {
-
                 if (this.personalData.name === '') {
-                    this.registration.isActive = false;
+                    this.inputs.isActive = false;
                 } else {
-                    this.registration.isActive = true;
+                    this.inputs.isActive = true;
                 }
 
                 if(/^[a-zA-ZА-Яа-я]+$/.test(this.personalData.name) !== true || this.personalData.name === ''){
-                    this.registration.isMistake = true;
+                    this.inputs.isMistake = true;
                 }else{
-                    this.registration.isMistake = false;
+                    this.inputs.isMistake = false;
                 }
 
             },
             _checkInputLogin () {
                 if (this.personalData.login === '') {
-                    this.registration.isActive = false;
+                    this.inputs.isActive = false;
                 } else {
-                    this.registration.isActive = true;
+                    this.inputs.isActive = true;
                 }
 
                 if(/^[a-zA-Z0-9]+$/.test(this.personalData.login) !== true){
-                    this.registration.isMistake = true;
+                    this.inputs.isMistake = true;
                 }else{
-                    this.registration.isMistake = false;
+                    this.inputs.isMistake = false;
                 }
             },
             _checkInputMail () {
                 if (this.personalData.mail === '') {
-                    this.registration.isActive = false;
+                    this.inputs.isActive = false;
                 } else {
-                    this.registration.isActive = true;
+                    this.inputs.isActive = true;
                 }
 
                 if(/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(this.personalData.mail) !== true){
-                    this.registration.isMistake = true;
+                    this.inputs.isMistake = true;
                 }else{
-                    this.registration.isMistake = false;
+                    this.inputs.isMistake = false;
                 }
             },
             _checkInputPass () {
                 if (this.personalData.pass === '') {
-                    this.registration.isActive = false;
+                    this.inputs.isActive = false;
                 } else {
-                    this.registration.isActive = true;
+                    this.inputs.isActive = true;
                 }
 
                 if(this.personalData.pass === ''){
-                    this.registration.isMistake = true;
+                    this.inputs.isMistake = true;
                 }else{
-                    this.registration.isMistake = false;
+                    this.inputs.isMistake = false;
                 }
             },
             next () {
-                if(this.registration.isMistake == false){
-                    this.registration.isDone = true;
+                if(this.inputs.isMistake == false){
+                    this.inputs.isDone = true;
 
                     setTimeout( () => {
-                        this.registration.isDone = false;
+                        this.inputs.isDone = false;
                     }, 1000);
 
-                    this.registration.isMistake = false;
-                    this.registration.isActive = false;
-                    this.registration.step = this.registration.step + 1;
-                    if(this.registration.step === this.registration.questions.length){
-                        this.register()
+                    this.inputs.isMistake = false;
+                    this.inputs.isActive = false;
+                    this.inputs.step = this.inputs.step + 1;
+                    if(this.inputs.step === this[this.type].questions.length){
+                        if(this.type == 'register'){
+                            this.registration()
+                        }
+                        if(this.type == 'auth'){
+                            this.authorization()
+                        }
                     }
                 }else{
-                    this.registration.isMistakeNext = true;
+                    this.inputs.isMistakeNext = true;
                     setTimeout( () => {
-                        this.registration.isMistakeNext = false;
+                        this.inputs.isMistakeNext = false;
                     }, 1000)
                 }
             },
-            encpypt (arg) {
+            encrypt (arg) {
                 let array = SHA256(this.personalData[arg]).words;
                 var code = '';
                 for( let key of array){
@@ -195,14 +208,28 @@
                 }
                 return btoa(code);
             },
-            register () {
-                this.personalData.pass = this.encpypt('pass');
+            registration () {
+                this.personalData.pass = this.encrypt('pass');
                 this.$http.post("http://localhost:2000/register", this.personalData, {emulateJSON: true}).then( (res) => {
                     this.response = res.data;
                     this.alert.type = res.data.type;
                     this.alert.text = res.data.text;
                     this.alert.enabled = true;
-                    this.registration.enabled = false;
+                    this.register.enabled = false;
+                    console.log(this.personalData);
+                    console.log(res);
+                }, (err) => {
+                    console.log(err);
+                });
+            },
+            authorization () {
+                this.personalData.pass = this.encrypt('pass');
+                this.$http.post("http://localhost:2000/auth", this.personalData, {emulateJSON: true}).then( (res) => {
+                    this.response = res.data;
+                    this.alert.type = res.data.type;
+                    this.alert.text = res.data.text;
+                    this.alert.enabled = true;
+                    this.auth.enabled = false;
                     console.log(this.personalData);
                     console.log(res);
                 }, (err) => {
@@ -210,6 +237,9 @@
                 });
             }
         },
+        mounted() {
+            this.formInit()
+        }
     }
 </script>
 
