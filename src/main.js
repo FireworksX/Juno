@@ -9,6 +9,6 @@ Vue.component('enter', Form);
 new Vue({
     el: '#app',
     data: {
-        name: 'JUNO'
+        enterType: 'auth'
     }
 });

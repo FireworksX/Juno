@@ -17,6 +17,6 @@ _vue2.default.component('enter', _Form2.default);
 new _vue2.default({
     el: '#app',
     data: {
-        name: 'JUNO'
+        enterType: 'auth'
     }
 });
