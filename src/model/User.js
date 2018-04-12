@@ -3,16 +3,82 @@
  */
 import mongoose from 'mongoose';
 
-var regSchema = mongoose.model('users', {
-    firstName: String,
-    login: String,
-    mail: String,
-    password: String
+let regSchema = mongoose.model('users', {
+    firstName: {
+        type: String,
+        default: 'User'
+    },
+    login: {
+        type: String,
+        require: true
+    },
+    mail: {
+        type: String,
+        require: true
+    },
+    password: {
+        type: String,
+        require: true
+    },
+    age: {
+        type: Number,
+        default: 0
+    },
+    visit: {
+        type: Number,
+        default: 0
+    },
+    role: {
+        type: String,
+        default: 'user'
+    },
+    registerDate: {
+        type: Date,
+        default: Date.now
+    }
 });
+
+// let authSchema = mongoose.model('users', {
+//     login: {
+//         type: String,
+//         require: true
+//     },
+//     password: {
+//         type: String,
+//         require: true
+//     }
+// });
 
 class User {
     constructor() {
 
+    }
+
+    auth(obj) {
+        return new Promise((resolve, reject) => {
+            let findUser = regSchema({
+                login: obj.login,
+                password: obj.pass
+            });
+            regSchema.findOne({
+                login: obj.login
+            }, (err, result) => {
+               if(err){
+                   throw err;
+               }
+
+               if(result === null){
+                   reject({code: 454, type: 'failed', text: `Никого с логином ${obj.login} мы не нашли. Попробуйте ещё раз, может быть вы ошиблись или Зарегистрируйтесь это дело 20 секунд, обещаем.`})
+               }else{
+                   if(result.password === obj.pass){
+                       resolve({code: 202, type: 'success', text: `Пользователь с ником ${obj.login} успешно авторизирован, мы уже загрузили Вашу сессию, желаем удачи!`, object: result})
+                   }else{
+                       reject({code: 455, type: 'failed', text: `Пользователя ${obj.login} мы нашли, но пароль введён не верно. Поробуйте заново, может быть вы ошиблись, мы ждём вас!`});
+                   }
+
+               }
+            });
+        });
     }
 
     register(obj) {
@@ -41,7 +107,6 @@ class User {
                         if(err){
                             throw err;
                         }
-                        console.log(checkmail)
                         if(typeof checkmail[0] === 'object'){
                             reject({code: 453,type: 'failed', text: `Почта ${obj.mail} уже кем-то используется, попробуйте указать дугой адрес электронной почты.`})
                         }
@@ -61,6 +126,10 @@ class User {
             });
 
         });
+    }
+
+    static getProfile (obj) {
+
     }
 }
 

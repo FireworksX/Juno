@@ -11,7 +11,12 @@ let urlencoded = bodyParser.urlencoded({
 let user = new User();
 
 router.get('/app', (req, res) => {
-    res.render('application')
+    res.render('application');
+    if(!req.session.profile){
+        req.session.profile = '';
+    }else{
+        console.log(req.session.profile)
+    }
 });
 
 router.post('/register', urlencoded, (req, res) => {
@@ -23,7 +28,12 @@ router.post('/register', urlencoded, (req, res) => {
 });
 
 router.post('/auth', urlencoded, (req, res) => {
-    res.send({code: 451,type: 'failed', text: 'Извените, это техническая ошибка, мы уже работаем над испралением ситуации.'});
+    user.auth(req.body).then( (resolve) => {
+        req.session.profile = resolve.object;
+        res.send(resolve)
+    }, (reject) => {
+       res.send(reject);
+    });
 });
 
 

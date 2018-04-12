@@ -36,7 +36,7 @@
                     img(src="images/wave.png").form-alert__wave
                     .form-alert__head {{ alert[alert.type].head }}
                     p.form-alert__desc {{ alert.text }}
-                    .form-alert__btn {{ alert[alert.type].btnText }}
+                    .form-alert__btn(@click="changeType('choose')") {{ alert[alert.type].btnText }}
 
 
 </template>
@@ -142,7 +142,18 @@
             },
             changeType(type) {
                 this.type = type;
-                this.formInit()
+                this.alert.enabled = false;
+                this.inputs.step = 0;
+                this.formInit();
+                this.personalData.name = '';
+                this.personalData.login = '';
+                this.personalData.mail = '';
+                this.personalData.pass = '';
+            },
+            doEvent(event) {
+                if(event === 'failed'){
+                    this.changeType('register')
+                }
             },
             _checkInputName () {
                 console.log(this.inputs.isActive)

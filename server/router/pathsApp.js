@@ -24,6 +24,11 @@ var user = new _User2.default();
 
 router.get('/app', function (req, res) {
     res.render('application');
+    if (!req.session.profile) {
+        req.session.profile = '';
+    } else {
+        console.log(req.session.profile);
+    }
 });
 
 router.post('/register', urlencoded, function (req, res) {
@@ -35,7 +40,12 @@ router.post('/register', urlencoded, function (req, res) {
 });
 
 router.post('/auth', urlencoded, function (req, res) {
-    res.send({ code: 451, type: 'failed', text: 'Извените, это техническая ошибка, мы уже работаем над испралением ситуации.' });
+    user.auth(req.body).then(function (resolve) {
+        req.session.profile = resolve.object;
+        res.send(resolve);
+    }, function (reject) {
+        res.send(reject);
+    });
 });
 
 module.exports = router;

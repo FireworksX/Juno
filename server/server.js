@@ -41,6 +41,8 @@ var urlEncodeParser = _bodyParser2.default.urlencoded({
 app.set('views', _path2.default.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(_express2.default.static(__dirname + '/public'));
+app.use((0, _cookieParser2.default)());
+app.use((0, _expressSession2.default)({ secret: 'juno', resave: false, saveUninitialized: true }));
 
 app.use('/', _pathsApp2.default);
 
