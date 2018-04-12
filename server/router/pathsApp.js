@@ -24,11 +24,13 @@ var user = new _User2.default();
 
 router.get('/app', function (req, res) {
     res.render('application');
+});
+
+router.post('/profile', function (req, res) {
     if (!req.session.profile) {
         req.session.profile = '';
-    } else {
-        console.log(req.session.profile);
     }
+    res.send(req.session.profile);
 });
 
 router.post('/register', urlencoded, function (req, res) {

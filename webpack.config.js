@@ -41,16 +41,16 @@ module.exports = {
         },
       },
       {
-        test: /\.sсss$/,
+        test: /\.scss$/,
         use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
-            use: ['css-loader', 'sass-loader']
+            use: 'css-loader!sass-loader'
         })
       }
     ]
   },
   plugins: [
-      new ExtractTextPlugin('style.css')
+      new ExtractTextPlugin('styles-[name].css')
   ],
   resolve: {
     alias: {

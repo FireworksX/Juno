@@ -1,6 +1,5 @@
 <template lang="pug">
-    .form
-        #form__overlay
+    .form(v-if="enabled")
         .form__progress(:style="{ width: progress }")
         .form-choose(v-if="choose.enabled")
             .form-choose__body
@@ -42,17 +41,14 @@
 </template>
 
 <script>
-    import 'particles.js'
     import Vue from 'vue'
     import VueResource from 'vue-resource'
     import SHA256 from 'crypto-js/sha256'
 
-    particlesJS.load('form__overlay', 'particlesjs-config.json', () => console.log('Particles enabled'));
-
     Vue.use(VueResource);
 
     export default {
-        props: ['text'],
+        props: ['enabled'],
         data () {
             return {
                 type: 'choose', //Types: register, auth, choose - choose auth or register
@@ -270,10 +266,19 @@
                 }, (err) => {
                     console.log(err);
                 });
-            }
+            },
+//            getProfile () {
+//                this.$http.post("http://localhost:2000/profile").then( (res) => {
+//                    if(res.data !== '' && typeof res.data === 'object'){
+//                        this.enabled = false;
+//                    }
+//                }, (err) => {
+//                    console.log(err);
+//                });
+//            }
         },
         mounted() {
-            this.formInit()
+            this.formInit();
         }
     }
 </script>

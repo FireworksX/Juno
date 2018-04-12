@@ -12,11 +12,13 @@ let user = new User();
 
 router.get('/app', (req, res) => {
     res.render('application');
+});
+
+router.post('/profile', (req, res) => {
     if(!req.session.profile){
         req.session.profile = '';
-    }else{
-        console.log(req.session.profile)
     }
+    res.send(req.session.profile);
 });
 
 router.post('/register', urlencoded, (req, res) => {

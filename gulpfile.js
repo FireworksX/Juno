@@ -19,9 +19,9 @@ gulp.task('sass', function(){
 });
 
 gulp.task('sassServer', function(){
-    return gulp.src('server/public/styles/**/*.+(sass|scss)')
+    return gulp.src('src/public/**/*.+(sass|scss)')
         .pipe(sass())
-        .pipe(gulp.dest('server/public/styles/css'))
+        .pipe(gulp.dest('server/public'))
         .pipe(browserSync.reload({stream: true}))
 });
 
