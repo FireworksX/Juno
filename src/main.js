@@ -2,28 +2,39 @@
 
 import 'particles.js'
 import Vue from 'vue'
+import VueRouter from 'vue-router'
 import Form from './components/Form.vue'
-import Profile from './components/Profile.vue'
+import Dashboard from './components/Dashboard.vue'
 import VueResource from 'vue-resource'
 
 particlesJS.load('form__overlay', 'particlesjs-config.json', () => console.log('Particles enabled'));
 
-Vue.component('enter', Form);
-Vue.component('profile', Profile);
+
 
 Vue.use(VueResource);
+Vue.use(VueRouter);
+
+const routes = [
+    { path: '/sign', component: Form },
+    { path: '/dashboard', component: Dashboard },
+];
+
+const router = new VueRouter({
+    routes,
+    // mode: 'history'
+});
 
 new Vue({
     el: '#app',
+    router,
     data: {
-        formEnabled: false,
-        particlesBlur: true,
+
     },
     methods: {
-        getProfile () {
+        getSession () {
             this.$http.post("http://localhost:2000/profile").then( (res) => {
                 if(res.data !== '' && typeof res.data === 'object'){
-                    this.formEnabled = false;
+
                 }
             }, (err) => {
                 console.log(err);
@@ -31,6 +42,6 @@ new Vue({
         }
     },
     mounted() {
-        //this.getProfile();
+        this.getSession();
     }
 });

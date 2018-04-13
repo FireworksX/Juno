@@ -8,13 +8,17 @@ var _vue = require('vue');
 
 var _vue2 = _interopRequireDefault(_vue);
 
+var _vueRouter = require('vue-router');
+
+var _vueRouter2 = _interopRequireDefault(_vueRouter);
+
 var _Form = require('./components/Form.vue');
 
 var _Form2 = _interopRequireDefault(_Form);
 
-var _Profile = require('./components/Profile.vue');
+var _Dashboard = require('./components/Dashboard.vue');
 
-var _Profile2 = _interopRequireDefault(_Profile);
+var _Dashboard2 = _interopRequireDefault(_Dashboard);
 
 var _vueResource = require('vue-resource');
 
@@ -26,31 +30,30 @@ particlesJS.load('form__overlay', 'particlesjs-config.json', function () {
     return console.log('Particles enabled');
 });
 
-_vue2.default.component('enter', _Form2.default);
-_vue2.default.component('profile', _Profile2.default);
-
 _vue2.default.use(_vueResource2.default);
+_vue2.default.use(_vueRouter2.default);
+
+var routes = [{ path: '/sign', component: _Form2.default }, { path: '/dashboard', component: _Dashboard2.default }];
+
+var router = new _vueRouter2.default({
+    routes: routes,
+    mode: 'history'
+});
 
 new _vue2.default({
     el: '#app',
-    data: {
-        formEnabled: false,
-        particlesBlur: true
-    },
+    router: router,
+    data: {},
     methods: {
-        getProfile: function getProfile() {
-            var _this = this;
-
+        getSession: function getSession() {
             this.$http.post("http://localhost:2000/profile").then(function (res) {
-                if (res.data !== '' && _typeof(res.data) === 'object') {
-                    _this.formEnabled = false;
-                }
+                if (res.data !== '' && _typeof(res.data) === 'object') {}
             }, function (err) {
                 console.log(err);
             });
         }
     },
     mounted: function mounted() {
-        //this.getProfile();
+        this.getSession();
     }
 });

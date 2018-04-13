@@ -48,9 +48,10 @@
     Vue.use(VueResource);
 
     export default {
-        props: ['enabled'],
+        //props: ['enabled'],
         data () {
             return {
+                enabled: true,
                 type: 'choose', //Types: register, auth, choose - choose auth or register
                 choose: {
                     enabled: false

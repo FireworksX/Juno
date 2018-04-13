@@ -13,8 +13,8 @@ html
         title juno
     body
         #app
-            #form__overlay(:class="{ particles_blur: particlesBlur }")
-            enter(:enabled="formEnabled")
-            profile
+            #form__overlay
+            router-view
+
 
         script(src="build.js")
