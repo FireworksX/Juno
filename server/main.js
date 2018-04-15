@@ -40,17 +40,21 @@ var router = new _vueRouter2.default({
     // mode: 'history'
 });
 
-new _vue2.default({
+var vm = new _vue2.default({
     el: '#app',
     router: router,
     data: {},
     methods: {
         getSession: function getSession() {
+            var _this = this;
+
             this.$http.post("http://localhost:2000/profile").then(function (res) {
-                if (res.data !== '' && _typeof(res.data) === 'object') {
-                    console.log(res.data);
+                if (res.data !== false && _typeof(res.data) === 'object') {
+                    console.log(res);
+                    _this.$router.replace('dashboard');
+                } else {
+                    _this.$router.replace('sign');
                 }
-                console.log(res);
             }, function (err) {
                 console.log(err);
             });

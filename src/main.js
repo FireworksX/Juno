@@ -24,7 +24,7 @@ const router = new VueRouter({
     // mode: 'history'
 });
 
-new Vue({
+let vm = new Vue({
     el: '#app',
     router,
     data: {
@@ -33,10 +33,12 @@ new Vue({
     methods: {
         getSession () {
             this.$http.post("http://localhost:2000/profile").then( (res) => {
-                if(res.data !== '' && typeof res.data === 'object'){
-                    console.log(res.data)
+                if(res.data !== false && typeof res.data === 'object'){
+                    console.log(res)
+                    this.$router.replace('dashboard')
+                }else{
+                    this.$router.replace('sign')
                 }
-                console.log(res)
             }, (err) => {
                 console.log(err);
             });
@@ -46,3 +48,4 @@ new Vue({
         this.getSession();
     }
 });
+
