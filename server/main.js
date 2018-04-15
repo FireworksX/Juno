@@ -36,8 +36,8 @@ _vue2.default.use(_vueRouter2.default);
 var routes = [{ path: '/sign', component: _Form2.default }, { path: '/dashboard', component: _Dashboard2.default }];
 
 var router = new _vueRouter2.default({
-    routes: routes,
-    mode: 'history'
+    routes: routes
+    // mode: 'history'
 });
 
 new _vue2.default({
@@ -47,7 +47,10 @@ new _vue2.default({
     methods: {
         getSession: function getSession() {
             this.$http.post("http://localhost:2000/profile").then(function (res) {
-                if (res.data !== '' && _typeof(res.data) === 'object') {}
+                if (res.data !== '' && _typeof(res.data) === 'object') {
+                    console.log(res.data);
+                }
+                console.log(res);
             }, function (err) {
                 console.log(err);
             });

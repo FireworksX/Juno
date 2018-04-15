@@ -28,7 +28,7 @@ router.get('/app', function (req, res) {
 
 router.post('/profile', function (req, res) {
     if (!req.session.profile) {
-        req.session.profile = '';
+        req.session.profile = false;
     }
     res.send(req.session.profile);
 });
@@ -44,6 +44,7 @@ router.post('/register', urlencoded, function (req, res) {
 router.post('/auth', urlencoded, function (req, res) {
     user.auth(req.body).then(function (resolve) {
         req.session.profile = resolve.object;
+        req.session.profile.visit++;
         res.send(resolve);
     }, function (reject) {
         res.send(reject);

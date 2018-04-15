@@ -14,18 +14,18 @@
                 i.ion-android-arrow-forward.form__btn(@click="next" v-if="register.step !== 4")
                 .form__container
                     .form__caption(v-bind:class="{ form__caption_active: inputs.isActive }") {{ register.questions[inputs.step] }}
-                    input.form__input(type="text" v-model="personalData.name" v-if="inputs.step === 0" )(@input="_checkInputName")
-                    input.form__input(type="text" v-model="personalData.login" v-if="inputs.step === 1")(@input="_checkInputLogin")
-                    input.form__input(type="text" v-model="personalData.mail" v-if="inputs.step === 2")(@input="_checkInputMail")
-                    input.form__input(type="password" v-model="personalData.pass" v-if="inputs.step === 3")(@input="_checkInputPass")
+                    input.form__input(type="text" v-model="personalData.name" v-if="inputs.step === 0" )(@input="_checkInputs")
+                    input.form__input(type="text" v-model="personalData.login" v-if="inputs.step === 1")(@input="_checkInputs")
+                    input.form__input(type="text" v-model="personalData.mail" v-if="inputs.step === 2")(@input="_checkInputs")
+                    input.form__input(type="password" v-model="personalData.pass" v-if="inputs.step === 3")(@input="_checkInputs")
                     .form__line
         .form-auth(v-if="auth.enabled")
             .form-register__body.animated(:class="{ shake: inputs.isMistakeNext,  done: inputs.isDone}")
                 i.ion-android-arrow-forward.form__btn(@click="next" v-if="inputs.step !== inputs.countStep")
                 .form__container
                     .form__caption(v-bind:class="{ form__caption_active: inputs.isActive }") {{ auth.questions[inputs.step] }}
-                    input.form__input(type="text" v-model="personalData.login" v-if="inputs.step === 0")(@input="_checkInputLogin")
-                    input.form__input(type="password" v-model="personalData.pass" v-if="inputs.step === 1")(@input="_checkInputPass")
+                    input.form__input(type="text" v-model="personalData.login" v-if="inputs.step === 0")(@input="_checkInputs")
+                    input.form__input(type="password" v-model="personalData.pass" v-if="inputs.step === 1")(@input="_checkInputs")
                     .form__line
         .form-alert(v-if="alert.enabled")
             .form-alert__body
@@ -147,67 +147,73 @@
                 this.personalData.mail = '';
                 this.personalData.pass = '';
             },
-            doEvent(event) {
-                if(event === 'failed'){
-                    this.changeType('register')
+            _checkInputs () {
+                let input = '';
+                if(this.type === 'auth'){
+                    if(this.inputs.step === 0){
+                        input = 'login'
+                    }
+                    if(this.inputs.step === 1){
+                        input = 'pass'
+                    }
                 }
-            },
-            _checkInputName () {
-                console.log(this.inputs.isActive)
-                if (this.personalData.name === '') {
+                if(this.type === 'register'){
+                    if(this.inputs.step === 0){
+                        input = 'name'
+                    }
+                    if(this.inputs.step === 1){
+                        input = 'login'
+                    }
+                    if(this.inputs.step === 2){
+                        input = 'mail'
+                    }
+                    if(this.inputs.step === 3){
+                        input = 'pass'
+                    }
+                }
+                if(this.personalData[input] === ''){
                     this.inputs.isActive = false;
-                } else {
+                }else{
                     this.inputs.isActive = true;
                 }
-
-                if(/^[a-zA-ZА-Яа-я]+$/.test(this.personalData.name) !== true || this.personalData.name === ''){
-                    this.inputs.isMistake = true;
-                }else{
-                    this.inputs.isMistake = false;
-                }
+                this._validData(input);
+                console.log(this.personalData[input])
 
             },
-            _checkInputLogin () {
-                if (this.personalData.login === '') {
-                    this.inputs.isActive = false;
-                } else {
-                    this.inputs.isActive = true;
-                }
-
-                if(/^[a-zA-Z0-9]+$/.test(this.personalData.login) !== true){
-                    this.inputs.isMistake = true;
-                }else{
-                    this.inputs.isMistake = false;
-                }
-            },
-            _checkInputMail () {
-                if (this.personalData.mail === '') {
-                    this.inputs.isActive = false;
-                } else {
-                    this.inputs.isActive = true;
-                }
-
-                if(/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(this.personalData.mail) !== true){
-                    this.inputs.isMistake = true;
-                }else{
-                    this.inputs.isMistake = false;
-                }
-            },
-            _checkInputPass () {
-                if (this.personalData.pass === '') {
-                    this.inputs.isActive = false;
-                } else {
-                    this.inputs.isActive = true;
-                }
-
-                if(this.personalData.pass === ''){
-                    this.inputs.isMistake = true;
-                }else{
-                    this.inputs.isMistake = false;
+            _validData (data) {
+                switch (data){
+                    case 'name':
+                        if(/^[a-zA-ZА-Яа-я]+$/.test(this.personalData.name) !== true || this.personalData.name === ''){
+                            this.inputs.isMistake = true;
+                        }else{
+                            this.inputs.isMistake = false;
+                        }
+                        break;
+                    case 'login':
+                        if(/^[a-zA-Z0-9]+$/.test(this.personalData.login) !== true){
+                            this.inputs.isMistake = true;
+                        }else{
+                            this.inputs.isMistake = false;
+                        }
+                        break;
+                    case 'mail':
+                        if(/^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/.test(this.personalData.mail) !== true){
+                            this.inputs.isMistake = true;
+                        }else{
+                            this.inputs.isMistake = false;
+                        }
+                        break;
+                    case 'pass':
+                        if(this.personalData.pass === ''){
+                            this.inputs.isMistake = true;
+                        }else{
+                            this.inputs.isMistake = false;
+                        }
+                        break;
                 }
             },
             next () {
-                if(this.inputs.isMistake == false){
+                if(this.inputs.isMistake === false){
                     this.inputs.isDone = true;
 
                     setTimeout( () => {
@@ -218,10 +224,10 @@
                     this.inputs.isActive = false;
                     this.inputs.step = this.inputs.step + 1;
                     if(this.inputs.step === this[this.type].questions.length){
-                        if(this.type == 'register'){
+                        if(this.type === 'register'){
                             this.registration()
                         }
-                        if(this.type == 'auth'){
+                        if(this.type === 'auth'){
                             this.authorization()
                         }
                     }
@@ -234,7 +240,7 @@
             },
             encrypt (arg) {
                 let array = SHA256(this.personalData[arg]).words;
-                var code = '';
+                let code = '';
                 for( let key of array){
                     code += `${String(key)}?`
                 }

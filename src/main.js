@@ -34,8 +34,9 @@ new Vue({
         getSession () {
             this.$http.post("http://localhost:2000/profile").then( (res) => {
                 if(res.data !== '' && typeof res.data === 'object'){
-
+                    console.log(res.data)
                 }
+                console.log(res)
             }, (err) => {
                 console.log(err);
             });
