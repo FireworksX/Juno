@@ -8,6 +8,7 @@
     import Vue from 'vue'
     import VueResourse from 'vue-resource'
     import Person_small from '../components/Person_small.vue'
+    import Nodes from '../model/Nodes'
 
     Vue.use(VueResourse);
 
@@ -31,8 +32,20 @@
             }
         },
         mounted() {
-            this.getSession()
+            this.getSession();
+            new Nodes('.paper')
         }
     }
 
 </script>
+
+<style lang="sass">
+
+    .paper
+        width: 1920px
+        height: 1080px
+        position: absolute
+        left: 0
+        top: 0
+
+</style>

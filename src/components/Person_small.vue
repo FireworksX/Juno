@@ -52,6 +52,7 @@
         width: 50px
         height: 50px
         position: relative
+        cursor: pointer
 
     .person-small__list
         position: absolute
