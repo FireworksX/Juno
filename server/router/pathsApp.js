@@ -33,6 +33,14 @@ router.post('/profile', function (req, res) {
     res.send(req.session.profile);
 });
 
+router.post('/getSession', urlencoded, function (req, res) {
+    res.send(req.session.profile);
+});
+
+router.post('/getSessionAuto', urlencoded, function (req, res) {
+    res.send({ firstName: 'John', login: 'spaceman' });
+});
+
 router.post('/register', urlencoded, function (req, res) {
     user.register(req.body).then(function (resolve) {
         res.send(resolve);

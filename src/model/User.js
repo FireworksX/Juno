@@ -1,5 +1,5 @@
 /*
-    Class for User: Register, Auth, GetInfo
+    Class for User: Register, Auth, Get session
  */
 import mongoose from 'mongoose';
 
@@ -128,7 +128,32 @@ class User {
         });
     }
 
-    static getProfile (obj) {
+    getProfile (obj) {
+        return new Promise( (resolve, reject) => {
+            console.log(obj.login)
+            if(obj.login === '' || obj.login === 'undefined'){
+                reject({code: 457, type: 'failed', text: 'Не удалось загрузить данные пользователя'});
+            }
+
+            regSchema.findOne({
+                login: obj.login
+            }, (err, result) => {
+                if(err){
+                    throw err;
+                }
+                console.log(result)
+                if(result === null){
+                    reject({code: 456, type: 'failed', text: 'Не удалось загрузить данные пользователя'});
+                }else{
+                    resolve({code: 203, type: 'success', text: 'Сессия успешно загружена', object: result})
+                }
+            });
+
+        });
+
+
+
+
 
     }
 }

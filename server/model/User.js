@@ -3,7 +3,7 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         Class for User: Register, Auth, GetInfo
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         Class for User: Register, Auth, Get session
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
 
@@ -138,9 +138,30 @@ var User = function () {
                 });
             });
         }
-    }], [{
+    }, {
         key: 'getProfile',
-        value: function getProfile(obj) {}
+        value: function getProfile(obj) {
+            return new Promise(function (resolve, reject) {
+                console.log(obj.login);
+                if (obj.login === '' || obj.login === 'undefined') {
+                    reject({ code: 457, type: 'failed', text: 'Не удалось загрузить данные пользователя' });
+                }
+
+                regSchema.findOne({
+                    login: obj.login
+                }, function (err, result) {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log(result);
+                    if (result === null) {
+                        reject({ code: 456, type: 'failed', text: 'Не удалось загрузить данные пользователя' });
+                    } else {
+                        resolve({ code: 203, type: 'success', text: 'Сессия успешно загружена', object: result });
+                    }
+                });
+            });
+        }
     }]);
 
     return User;

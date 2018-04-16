@@ -1,6 +1,6 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; // y
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; //
 
 require('particles.js');
 
@@ -20,6 +20,10 @@ var _Dashboard = require('./components/Dashboard.vue');
 
 var _Dashboard2 = _interopRequireDefault(_Dashboard);
 
+var _App = require('./components/App.vue');
+
+var _App2 = _interopRequireDefault(_App);
+
 var _vueResource = require('vue-resource');
 
 var _vueResource2 = _interopRequireDefault(_vueResource);
@@ -33,7 +37,7 @@ particlesJS.load('form__overlay', 'particlesjs-config.json', function () {
 _vue2.default.use(_vueResource2.default);
 _vue2.default.use(_vueRouter2.default);
 
-var routes = [{ path: '/sign', component: _Form2.default }, { path: '/dashboard', component: _Dashboard2.default }];
+var routes = [{ path: '/sign', component: _Form2.default }, { path: '/dashboard', component: _Dashboard2.default }, { path: '/:login', component: _App2.default, props: true }];
 
 var router = new _vueRouter2.default({
     routes: routes
@@ -43,15 +47,18 @@ var router = new _vueRouter2.default({
 var vm = new _vue2.default({
     el: '#app',
     router: router,
-    data: {},
+    data: {
+        profile: {},
+        particlesBlur: false
+    },
     methods: {
         getSession: function getSession() {
             var _this = this;
 
             this.$http.post("http://localhost:2000/profile").then(function (res) {
                 if (res.data !== false && _typeof(res.data) === 'object') {
-                    console.log(res);
-                    _this.$router.replace('dashboard');
+                    _this.$router.replace('/' + res.data.login);
+                    _this.particlesBlur = true;
                 } else {
                     _this.$router.replace('sign');
                 }
@@ -61,6 +68,8 @@ var vm = new _vue2.default({
         }
     },
     mounted: function mounted() {
-        this.getSession();
+        //this.getSession();
+        this.$router.replace('/spaceman');
+        this.particlesBlur = true;
     }
 });

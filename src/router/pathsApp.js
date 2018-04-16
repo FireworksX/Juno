@@ -21,6 +21,14 @@ router.post('/profile', (req, res) => {
     res.send(req.session.profile);
 });
 
+router.post('/getSession',urlencoded, (req, res) => {
+    res.send(req.session.profile)
+});
+
+router.post('/getSessionAuto',urlencoded, (req, res) => {
+    res.send({firstName: 'John', login: 'spaceman'})
+});
+
 router.post('/register', urlencoded, (req, res) => {
     user.register(req.body).then( (resolve) => {
         res.send(resolve);
@@ -33,7 +41,7 @@ router.post('/auth', urlencoded, (req, res) => {
     user.auth(req.body).then( (resolve) => {
         req.session.profile = resolve.object;
         req.session.profile.visit++;
-        res.send(resolve)
+        res.send(resolve);
     }, (reject) => {
        res.send(reject);
     });

@@ -11,5 +11,9 @@ body {
 }
 
 .particles_blur{
+  filter: blur(10px)
+}
+
+.particles_blur{
   filter: blur(5px);
 }

@@ -254,8 +254,6 @@
                     this.alert.text = res.data.text;
                     this.alert.enabled = true;
                     this.register.enabled = false;
-                    console.log(this.personalData);
-                    console.log(res);
                 }, (err) => {
                     console.log(err);
                 });
@@ -268,8 +266,6 @@
                     this.alert.text = res.data.text;
                     this.alert.enabled = true;
                     this.auth.enabled = false;
-                    console.log(this.personalData);
-                    console.log(res);
                 }, (err) => {
                     console.log(err);
                 });
@@ -563,7 +559,7 @@
             position: absolute
             left: 50%
             margin-left: -75px
-            bottom: 6px
+            bottom: 11px
             -webkit-border-radius: 5px
             -moz-border-radius: 5px
             border-radius: 5px
@@ -575,7 +571,7 @@
             position: absolute
             right: 50%
             margin-right: -75px
-            bottom: 6px
+            bottom: 11px
             -webkit-border-radius: 5px
             -moz-border-radius: 5px
             border-radius: 5px
