@@ -26,7 +26,7 @@ router.post('/getSession',urlencoded, (req, res) => {
 });
 
 router.post('/getSessionAuto',urlencoded, (req, res) => {
-    res.send({firstName: 'John', login: 'spaceman'})
+    res.send({firstName: 'John', login: 'spaceman'});
 });
 
 router.post('/register', urlencoded, (req, res) => {

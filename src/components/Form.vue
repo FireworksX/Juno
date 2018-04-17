@@ -289,7 +289,7 @@
 <style lang="sass">
 
     .form
-        background: #e4f0ff
+        background: #1a2535
         width: 100%
         height: 100vh
         z-index: 0

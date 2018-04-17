@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import Form from './components/Form.vue'
 import Dashboard from './components/Dashboard.vue'
 import App from './components/App.vue'
+import Lessons from './components/Lessons.vue'
 import VueResource from 'vue-resource'
 
 particlesJS.load('form__overlay', 'particlesjs-config.json', () => console.log('Particles enabled'));
@@ -18,7 +19,8 @@ Vue.use(VueRouter);
 const routes = [
     { path: '/sign', component: Form },
     { path: '/dashboard', component: Dashboard },
-    { path: '/:login', component: App, props: true },
+    { path: '/lessons/:id', component: Lessons },
+    { path: '/', component: App, props: true },
 ];
 
 const router = new VueRouter({
@@ -37,8 +39,8 @@ let vm = new Vue({
         getSession () {
             this.$http.post("http://localhost:2000/profile").then( (res) => {
                 if(res.data !== false && typeof res.data === 'object'){
-                    this.$router.replace(`/${res.data.login}`)
-                    this.particlesBlur = true;
+                    this.$router.replace(`/`);
+                    this.particlesBlur = false;
                 }else{
                     this.$router.replace('sign')
                 }
@@ -49,8 +51,8 @@ let vm = new Vue({
     },
     mounted() {
         //this.getSession();
-        this.$router.replace(`/spaceman`)
-        this.particlesBlur = true;
+        this.$router.replace(`/`);
+        this.particlesBlur = false;
     }
 });
 

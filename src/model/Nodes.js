@@ -9,41 +9,10 @@ let nodesArr = [
         id: 0,
         name: 'HTML',
         parent: 0,
+        enabled: true,
         position: {
-            cx: 100,
-            cy: 100,
-            cr: 30
-        },
-        styles: {
-            fill: '#34495e',
-            stroke: '#34495e',
-            strokeWidth: 3,
-            shadow: true
-        }
-    },
-    {
-        id: 1,
-        name: 'CSS',
-        parent: 0,
-        position: {
-            cx: 300,
-            cy: 400,
-            cr: 30
-        },
-        styles: {
-            fill: '#34495e',
-            stroke: '#34495e',
-            strokeWidth: 3,
-            shadow: true
-        }
-    },
-    {
-        id: 2,
-        name: 'JS',
-        parent: 1,
-        position: {
-            cx: 400,
-            cy: 100,
+            cx: 850,
+            cy: 125,
             cr: 40
         },
         styles: {
@@ -51,45 +20,80 @@ let nodesArr = [
             stroke: '#34495e',
             strokeWidth: 3,
             shadow: true
-        }
+        },
+        path: '/lessons/html'
+    },
+    {
+        id: 1,
+        name: 'CSS',
+        parent: 0,
+        enabled: false,
+        position: {
+            cx: 625,
+            cy: 140,
+            cr: 40
+        },
+        styles: {
+            fill: '#34495e',
+            stroke: '#34495e',
+            strokeWidth: 3,
+            shadow: true
+        },
+        path: '/lessons/css'
+    },
+    {
+        id: 2,
+        name: 'JS',
+        parent: 0,
+        enabled: true,
+        position: {
+            cx: 1220,
+            cy: 150,
+            cr: 40
+        },
+        styles: {
+            fill: '#34495e',
+            stroke: '#34495e',
+            strokeWidth: 3,
+            shadow: true
+        },
+        path: '/lessons/js'
     },
 ];
 
 class Nodes {
-    constructor (paper){
+    constructor (paper, nodes){
         this.paper = Snap(paper);
-        this.nodes = nodesArr;
-        let index = 1;
-        for(let node of this.nodes){
-            this.render(node);
-            index++;
-        }
+        this.nodes = nodes;
 
+        for( let node of nodes ){
+            this.node = node;
+            this._draw();
+        }
     }
 
-    draw(){
+
+    _draw(){
         let parentId = this.node.parent;
         let parentObj = this.nodes[parentId];
-        let {cx, cy} = parentObj.position;
+        let {cx, cy, cr} = parentObj.position;
 
-        let path = this.paper.path(`M${this.node.position.cx},${this.node.position.cy} L${cx},${cy}`);
+        let path = this.paper.path(`M${this.node.position.cx + this.node.position.cr},${this.node.position.cy + this.node.position.cr} L${cx + cr},${cy + cr}`);
         path.attr({
             stroke: '#000',
-            strokeWidth: 3
-        })
-        this.paper.prepend(path)
+            strokeWidth: 1
+        });
+
+        // if(this.node.styles.shadow === true){
+        //     path.attr({
+        //         filter: this.paper.filter(Snap.filter.shadow(5, 10, 5, '#000000', .5))
+        //     })
+        // }
+
+        //path.animate({d: `M${this.node.position.cx + this.node.position.cr},${this.node.position.cy + this.node.position.cr} L${cx + cr},${cy + cr}`}, 1000);
+        this.paper.prepend(path);
     }
 
-    render(node){
-        this.node = node;
-        let {cx, cy, cr} = node.position;
-        let {fill, stroke, strokeWidth, shadow} = node.styles;
-        let cir = this.paper.circle(cx, cy, cr);
-        cir.attr({fill, stroke, strokeWidth});
-        this.draw()
-        //console.log(node)
-
-    }
 
 }
 

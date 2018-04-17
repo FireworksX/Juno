@@ -24,6 +24,10 @@ var _App = require('./components/App.vue');
 
 var _App2 = _interopRequireDefault(_App);
 
+var _Lessons = require('./components/Lessons.vue');
+
+var _Lessons2 = _interopRequireDefault(_Lessons);
+
 var _vueResource = require('vue-resource');
 
 var _vueResource2 = _interopRequireDefault(_vueResource);
@@ -37,7 +41,7 @@ particlesJS.load('form__overlay', 'particlesjs-config.json', function () {
 _vue2.default.use(_vueResource2.default);
 _vue2.default.use(_vueRouter2.default);
 
-var routes = [{ path: '/sign', component: _Form2.default }, { path: '/dashboard', component: _Dashboard2.default }, { path: '/:login', component: _App2.default, props: true }];
+var routes = [{ path: '/sign', component: _Form2.default }, { path: '/dashboard', component: _Dashboard2.default }, { path: '/lessons/:id', component: _Lessons2.default }, { path: '/', component: _App2.default, props: true }];
 
 var router = new _vueRouter2.default({
     routes: routes
@@ -57,8 +61,8 @@ var vm = new _vue2.default({
 
             this.$http.post("http://localhost:2000/profile").then(function (res) {
                 if (res.data !== false && _typeof(res.data) === 'object') {
-                    _this.$router.replace('/' + res.data.login);
-                    _this.particlesBlur = true;
+                    _this.$router.replace('/');
+                    _this.particlesBlur = false;
                 } else {
                     _this.$router.replace('sign');
                 }
@@ -69,7 +73,7 @@ var vm = new _vue2.default({
     },
     mounted: function mounted() {
         //this.getSession();
-        this.$router.replace('/spaceman');
-        this.particlesBlur = true;
+        this.$router.replace('/');
+        this.particlesBlur = false;
     }
 });

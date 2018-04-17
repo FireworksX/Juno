@@ -22,15 +22,16 @@ app.use(session({secret: 'juno', resave: false, saveUninitialized: true}))
 
 app.use('/', appPaths);
 
+
 app.listen(2000, (err) => {
     if (err) {
         throw err
     }
-    console.log('Server started on 2000 port')
+    console.log('Server started on 2000 port');
 });
 
 mongoose.connect('mongodb://localhost/juno', (err) => {
     if(err)
         throw err;
-    console.log('Mongoose conected');
-})
+    console.log('Mongoose conected')
+});

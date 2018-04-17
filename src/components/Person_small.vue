@@ -37,6 +37,7 @@
 
     .person-small
         position: fixed
+        z-index: 100
         right: 30px
         top: 30px
         display: flex
