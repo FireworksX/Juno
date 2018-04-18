@@ -73,7 +73,7 @@ var vm = new _vue2.default({
     },
     mounted: function mounted() {
         //this.getSession();
-        this.$router.replace('/');
+        this.$router.replace('/lessons/0');
         this.particlesBlur = false;
     }
 });
