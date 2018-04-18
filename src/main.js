@@ -9,7 +9,7 @@ import App from './components/App.vue'
 import Lessons from './components/Lessons.vue'
 import VueResource from 'vue-resource'
 
-particlesJS.load('form__overlay', 'particlesjs-config.json', () => console.log('Particles enabled'));
+particlesJS.load('form__overlay', 'particlesjs-config.json');
 
 
 

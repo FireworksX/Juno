@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import User from '../model/User'
+import Nodes from '../model/Nodes'
 
 let router = express.Router();
 
@@ -9,6 +10,7 @@ let urlencoded = bodyParser.urlencoded({
 });
 
 let user = new User();
+let node = new Nodes();
 
 router.get('/app', (req, res) => {
     res.render('application');
@@ -23,6 +25,14 @@ router.post('/profile', (req, res) => {
 
 router.post('/getSession',urlencoded, (req, res) => {
     res.send(req.session.profile)
+});
+
+router.post('/getNodes',urlencoded, (req, res) => {
+    node.getNodes().then( (resolve) => {
+        res.send(resolve);
+    }, (reject) => {
+       res.send(reject);
+    });
 });
 
 router.post('/getSessionAuto',urlencoded, (req, res) => {

@@ -34,9 +34,7 @@ var _vueResource2 = _interopRequireDefault(_vueResource);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-particlesJS.load('form__overlay', 'particlesjs-config.json', function () {
-    return console.log('Particles enabled');
-});
+particlesJS.load('form__overlay', 'particlesjs-config.json');
 
 _vue2.default.use(_vueResource2.default);
 _vue2.default.use(_vueRouter2.default);

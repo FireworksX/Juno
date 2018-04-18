@@ -11,7 +11,8 @@
     import Vue from 'vue'
     import VueResourse from 'vue-resource'
     import Person_small from '../components/Person_small.vue'
-    import Nodes from '../model/Nodes'
+    import DrawPaths from '../model/DrawPaths'
+
 
     Vue.use(VueResourse);
 
@@ -23,72 +24,21 @@
         data () {
             return {
                 profile: {},
-                nodes: [
-                    {
-                        id: 0,
-                        name: 'HTML',
-                        parent: 0,
-                        enabled: true,
-                        position: {
-                            cx: 850,
-                            cy: 125,
-                            cr: 40
-                        },
-                        styles: {
-                            background: '#34495e',
-                            left: '850px',
-                            top: '125px',
-                            width: '80px',
-                            height: '80px'
-                        },
-                        path: '/lessons/0'
-                    },
-                    {
-                        id: 1,
-                        name: 'CSS',
-                        parent: 0,
-                        enabled: false,
-                        position: {
-                            cx: 625,
-                            cy: 140,
-                            cr: 40
-                        },
-                        styles: {
-                            background: '#34495e',
-                            left: '625px',
-                            top: '140px',
-                            width: '80px',
-                            height: '80px'
-                        },
-                        path: '/lessons/1'
-                    },
-                    {
-                        id: 2,
-                        name: 'JS',
-                        parent: 0,
-                        enabled: true,
-                        position: {
-                            cx: 1220,
-                            cy: 150,
-                            cr: 40
-                        },
-                        styles: {
-                            background: '#34495e',
-                            left: '1220px',
-                            top: '150px',
-                            width: '80px',
-                            height: '80px'
-                        },
-                        path: '/lessons/2'
-                    },
-                ]
+                nodes: []
             }
         },
         methods: {
             getSession () {
                 this.$http.post("http://localhost:2000/getSessionAuto").then( (res) => {
                     this.profile = res.data;
-                    console.log(this.profile)
+                }, (err) => {
+                    console.log(err);
+                });
+            },
+            getNodes () {
+                this.$http.post("http://localhost:2000/getNodes").then( (res) => {
+                    this.nodes = res.data.object;
+                    new DrawPaths('.paper', this.nodes).render();
                 }, (err) => {
                     console.log(err);
                 });
@@ -99,8 +49,7 @@
         },
         mounted() {
             this.getSession();
-            new Nodes('.paper', this.nodes);
-            console.log(this)
+            this.getNodes();
         }
     }
 

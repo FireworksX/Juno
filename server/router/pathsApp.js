@@ -12,6 +12,10 @@ var _User = require('../model/User');
 
 var _User2 = _interopRequireDefault(_User);
 
+var _Nodes = require('../model/Nodes');
+
+var _Nodes2 = _interopRequireDefault(_Nodes);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = _express2.default.Router();
@@ -21,6 +25,7 @@ var urlencoded = _bodyParser2.default.urlencoded({
 });
 
 var user = new _User2.default();
+var node = new _Nodes2.default();
 
 router.get('/app', function (req, res) {
     res.render('application');
@@ -35,6 +40,14 @@ router.post('/profile', function (req, res) {
 
 router.post('/getSession', urlencoded, function (req, res) {
     res.send(req.session.profile);
+});
+
+router.post('/getNodes', urlencoded, function (req, res) {
+    node.getNodes().then(function (resolve) {
+        res.send(resolve);
+    }, function (reject) {
+        res.send(reject);
+    });
 });
 
 router.post('/getSessionAuto', urlencoded, function (req, res) {

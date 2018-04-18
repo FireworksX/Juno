@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 module.exports = {
@@ -54,7 +55,10 @@ module.exports = {
     ]
   },
   plugins: [
-      new ExtractTextPlugin('styles-[name].css')
+      new ExtractTextPlugin('styles-[name].css'),
+      new webpack.DefinePlugin({
+          "typeof window": "\"object\""
+      })
   ],
   resolve: {
     alias: {
