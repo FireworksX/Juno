@@ -37,7 +37,7 @@ let vm = new Vue({
     },
     methods: {
         getSession () {
-            this.$http.post("http://localhost:2000/profile").then( (res) => {
+            this.$http.post("http://localhost:2000/profileAuto").then( (res) => {
                 if(res.data !== false && typeof res.data === 'object'){
                     this.$router.replace(`/`);
                     this.particlesBlur = false;
@@ -50,9 +50,9 @@ let vm = new Vue({
         }
     },
     mounted() {
-        //this.getSession();
-        this.$router.replace(`/lessons/0`);
-        this.particlesBlur = false;
+        this.getSession();
+        // this.$router.replace(`/lessons/0`);
+        // this.particlesBlur = false;
     }
 });
 

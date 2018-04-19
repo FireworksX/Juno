@@ -3,7 +3,7 @@
         person-small(:user="profile")
         ul.application-container
             svg.paper
-            li.application-container__item(v-for="(node, index) in nodes" v-bind:style="node.styles" v-on:click="selectLesson(index)")
+            li.application-container__item(v-for="(node, index) in nodes" v-bind:style="node.styles" v-on:click="selectLesson(index)" v-bind:class="{node_unlock: node.progress.enabled}")
                 |{{ node.name }}
 </template>
 
@@ -24,13 +24,15 @@
         data () {
             return {
                 profile: {},
-                nodes: []
+                nodes: [],
+                enabled: true
             }
         },
         methods: {
             getSession () {
-                this.$http.post("http://localhost:2000/getSessionAuto").then( (res) => {
+                this.$http.post("http://localhost:2000/profileAuto").then( (res) => {
                     this.profile = res.data;
+                    this.getNodes();
                 }, (err) => {
                     console.log(err);
                 });
@@ -38,6 +40,7 @@
             getNodes () {
                 this.$http.post("http://localhost:2000/getNodes").then( (res) => {
                     this.nodes = res.data.object;
+                    this.pushPersonalData();
                     new DrawPaths('.paper', this.nodes).render();
                 }, (err) => {
                     console.log(err);
@@ -45,11 +48,29 @@
             },
             selectLesson (id) {
                 this.$router.push(`/lessons/${id}`);
+            },
+            pushPersonalData() {
+                /*
+                    Проходим по всем нодам которые есть у пользователя в сессии ->
+                    внутри этого цикла запускаем ещё один цикл, который проходит по всем доступным нодам ->
+                    если ID ноды пользователя (которая находится в сессии) равна итерации ->
+                    в ноду с индексом итерации добавляем объект из сесии. (По умолчанию: progress: false из базы)
+                 */
+                let i = 0;
+                for( let key of this.profile.progress.nodes ){
+                    let j = 0;
+                    for( let node of this.nodes ){
+                        if(key.id === j){
+                            this.nodes[key.id].progress = key;
+                        }
+                        j++
+                    }
+                    i++;
+                }
             }
         },
         mounted() {
             this.getSession();
-            this.getNodes();
         }
     }
 
@@ -92,6 +113,9 @@
         justify-content: center
         align-items: center
         color: #fff
+
+
+    .node_unlock
         transition: .3s
         cursor: pointer
         &:hover

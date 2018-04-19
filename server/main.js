@@ -57,7 +57,7 @@ var vm = new _vue2.default({
         getSession: function getSession() {
             var _this = this;
 
-            this.$http.post("http://localhost:2000/profile").then(function (res) {
+            this.$http.post("http://localhost:2000/profileAuto").then(function (res) {
                 if (res.data !== false && _typeof(res.data) === 'object') {
                     _this.$router.replace('/');
                     _this.particlesBlur = false;
@@ -70,8 +70,8 @@ var vm = new _vue2.default({
         }
     },
     mounted: function mounted() {
-        //this.getSession();
-        this.$router.replace('/lessons/0');
-        this.particlesBlur = false;
+        this.getSession();
+        // this.$router.replace(`/lessons/0`);
+        // this.particlesBlur = false;
     }
 });

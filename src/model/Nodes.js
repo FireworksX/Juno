@@ -56,6 +56,9 @@ class Nodes {
                     top: '110px', (position.cy)
                     width: '80px', (position.cr * 2)
                     height: '80px' (position.cr * 2)
+                },
+                progress: {
+                    enabled: false   !!!
                 }
             }
          */

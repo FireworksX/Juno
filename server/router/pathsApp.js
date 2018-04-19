@@ -38,6 +38,32 @@ router.post('/profile', function (req, res) {
     res.send(req.session.profile);
 });
 
+router.post('/profileAuto', function (req, res) {
+    var obj = {
+        firstName: "John",
+        age: 0,
+        visit: 0,
+        role: "user",
+        login: "spaceman",
+        mail: "root@juno.com",
+        password: "MTIwOTIyMzUwMT8zMjcwMzAzMjE/LTExNDY5NDUwNjc/LTEzOTgwNTEyMDU/LTEyMTM1Nj...",
+        registerDate: '2018-04-12 12:36:17.290',
+        progress: {
+            nodes: [{
+                name: 'html',
+                enabled: true,
+                id: 0
+            }, {
+                name: 'js',
+                enabled: true,
+                id: 2
+            }]
+        }
+    };
+
+    res.send(obj);
+});
+
 router.post('/getSession', urlencoded, function (req, res) {
     res.send(req.session.profile);
 });
