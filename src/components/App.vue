@@ -47,7 +47,9 @@
                 });
             },
             selectLesson (id) {
-                this.$router.push(`/lessons/${id}`);
+                if(this.nodes[id].progress.enabled === true){
+                    this.$router.push(`/lessons/${id}`);
+                }
             },
             pushPersonalData() {
                 /*
