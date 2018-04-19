@@ -1,60 +1,60 @@
 <template lang="pug">
     .lessons
         .container
-            .lessons-statistics
-                h4.lessons-statistics__title Статистика
-                .lessons-statistics__container
-                    ul.lessons-statistics__list
-                        .row
-                            li.lessons-statistics__item.col-lg-4
-                                .lessons-statistics__icon
-                                    i.ion-ios-people.lessons-statistics__icon_one
-                                .lessons-body
-                                    .lessons-body__head Новых пользователей
-                                    .lessons-body__count
-                                        span.lessons-body__count_bold 34
+            //.lessons-statistics
+            //    h4.lessons-statistics__title Статистика
+            //    .lessons-statistics__container
+            //        ul.lessons-statistics__list
+            //            .row
+            //                li.lessons-statistics__item.col-lg-4
+            //                    .lessons-statistics__icon
+            //                        i.ion-ios-people.lessons-statistics__icon_one
+            //                    .lessons-body
+            //                        .lessons-body__head Новых пользователей
+            //                        .lessons-body__count
+            //                            span.lessons-body__count_bold 34
+            //                            |На этой неделе
+            //                li.lessons-statistics__item.col-lg-4
+            //                    .lessons-statistics__icon
+            //                        i.ion-clipboard.lessons-statistics__icon_two
+            //                    .lessons-body
+            //                        .lessons-body__head Человек решило этот тест
+            //                        .lessons-body__count
+            //                            span.lessons-body__count_bold 841
+            //                            |В этом месяце
+            //                li.lessons-statistics__item.col-lg-4
+            //                    .lessons-statistics__icon
+            //                        i.ion-android-favorite.lessons-statistics__icon_three
+            //                    .lessons-body
+            //                        .lessons-body__head Обсуждений
+            //                        .lessons-body__count
+            //                            span.lessons-body__count_bold 438
                                         |На этой неделе
-                            li.lessons-statistics__item.col-lg-4
-                                .lessons-statistics__icon
-                                    i.ion-clipboard.lessons-statistics__icon_two
-                                .lessons-body
-                                    .lessons-body__head Человек решило этот тест
-                                    .lessons-body__count
-                                        span.lessons-body__count_bold 841
-                                        |В этом месяце
-                            li.lessons-statistics__item.col-lg-4
-                                .lessons-statistics__icon
-                                    i.ion-android-favorite.lessons-statistics__icon_three
-                                .lessons-body
-                                    .lessons-body__head Обсуждений
-                                    .lessons-body__count
-                                        span.lessons-body__count_bold 438
-                                        |На этой неделе
-                .lessons-wrapper
-                    h4.lessons-wrapper__head 7 Lessons found
-                    ul.lessons-wrapper__list
-                        .row
-                            .lessons-item.col-lg-3
-                                .lessons-item__wrapper
-                                    .lessons-item__lock
-                                        div.lessons-item__icon
-                                            i.ion-locked
-                                        .lessons-item__text Извените данный урок закрыт для вас. Нужно решить предыдущий. Мы ждём вас!
-                                    .lesson-item__content
-                                        .lesson-item__top
-                                            img(src="lessons/0/post_bg.png").lesson-item__img
-                                            span.lesson-item__status Ongoing
-                                        .lesson-item__center
-                                            h6.lesson-item__title Введение в HTML
-                                            .lesson-item__peoples
-                                                img(src="lessons/0/avatar1.jpg").lesson-item__people
-                                                img(src="lessons/0/avatar2.jpg").lesson-item__people
-                                                img(src="lessons/0/avatar3.jpg").lesson-item__people
-                                                img(src="lessons/0/avatar4.jpg").lesson-item__people
-                                                span.lesson-item__more +7 more
-                                        .lesson-item__buttons
-                                            .lesson-item__start Начать
-                                            .lesson-item__details Подробнее
+            .lessons-wrapper
+                h4.lessons-wrapper__head 7 Lessons found
+                ul.lessons-wrapper__list
+                    .row
+                        li.lessons-item.col-lg-3(v-for="(lesson, index) in lessons")
+                            .lessons-item__wrapper
+                                .lessons-item__lock(v-if="!lesson.enabled")
+                                    div.lessons-item__icon
+                                        i.ion-locked
+                                    .lessons-item__text Извените данный урок закрыт для вас. Нужно решить предыдущий. Мы ждём вас!
+                                .lesson-item__content(:class="{ blur: !lesson.enabled }")
+                                    .lesson-item__top
+                                        img(:src="'lessons/'+ $route.params.id +'/'+ index +'/'+ lesson.bg_name").lesson-item__img
+                                        span.lesson-item__status(:style="{ background: lesson.status.color }") {{ lesson.status.text }}
+                                    .lesson-item__center
+                                        h6.lesson-item__title {{ lesson.title }}
+                                        .lesson-item__peoples
+                                            img(src="lessons/0/0/avatar1.jpg").lesson-item__people
+                                            img(src="lessons/0/0/avatar2.jpg").lesson-item__people
+                                            img(src="lessons/0/0/avatar3.jpg").lesson-item__people
+                                            img(src="lessons/0/0/avatar4.jpg").lesson-item__people
+                                            span.lesson-item__more +7 more
+                                    .lesson-item__buttons
+                                        .lesson-item__start Начать
+                                        .lesson-item__details Подробнее
 
 </template>
 
@@ -69,7 +69,29 @@
     export default {
         data () {
             return {
-                profile: {}
+                profile: {},
+                lessons: [
+                    {
+                        title: 'Введение в HTML',
+                        bg_name: 'post_bg.png',
+                        parent: 0,
+                        enabled: true,
+                        status: {
+                            color: '#ffed32',
+                            text: 'Finished'
+                        }
+                    },
+                    {
+                        title: 'Позиционирование',
+                        bg_name: 'post_bg.png',
+                        parent: 1,
+                        enabled: false,
+                        status: {
+                            color: '#fff',
+                            text: 'Ongoing'
+                        }
+                    },
+                ]
             }
         },
         methods: {
@@ -183,7 +205,7 @@
     /* Lessons Container */
 
     .lessons-wrapper
-        margin-top: 50px
+        padding-top: 50px
 
     .lessons-wrapper__head
         font-size: 14px
@@ -197,9 +219,9 @@
         overflow: hidden
         min-height: 300px
         background: #ffffff
-        -webkit-box-shadow: 0px 3px 20px 0px rgba(163, 198, 241, 0.3)
-        -moz-box-shadow: 0px 3px 20px 0px rgba(163, 198, 241, 0.3)
-        box-shadow: 0px 3px 20px 0px rgba(163, 198, 241, 0.3)
+        -webkit-box-shadow: 0px 20px 20px 0px rgba(78, 100, 134, 0.5)
+        -moz-box-shadow: 0px 20px 20px 0px rgba(78, 100, 134, 0.5)
+        box-shadow: 0px 20px 20px 0px rgba(78, 100, 134, 0.5)
         position: relative
 
     .lesson-item__top
@@ -213,7 +235,7 @@
         bottom: 10px
         right: 10px
         color: #797979
-        padding: 3px 7px
+        padding: 5px 10px
         display: inline-block
         background: #ffffff
         font-size: 12px
@@ -297,5 +319,9 @@
         font-weight: 500
         padding: 20px
         margin-top: 10px
+
+    .blur
+        filter: blur(5px)
+
 
 </style>

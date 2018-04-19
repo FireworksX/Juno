@@ -3,7 +3,7 @@
         person-small(:user="profile")
         ul.application-container
             svg.paper
-            li.application-container__item(v-for="node in nodes" v-bind:style="node.styles" v-on:click="selectLesson(node.id)")
+            li.application-container__item(v-for="(node, index) in nodes" v-bind:style="node.styles" v-on:click="selectLesson(index)")
                 |{{ node.name }}
 </template>
 

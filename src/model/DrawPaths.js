@@ -20,7 +20,6 @@ class DrawPaths {
         let parentId = this.node.parent;
         let parentObj = this.nodes[parentId];
         let {cx, cy, cr} = parentObj.position;
-
         let path = this.paper.path(`M${this.node.position.cx + this.node.position.cr},${this.node.position.cy + this.node.position.cr} L${cx + cr},${cy + cr}`);
         path.attr({
             stroke: '#000',
