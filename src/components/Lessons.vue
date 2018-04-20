@@ -40,15 +40,26 @@
                                     div.lessons-item__icon
                                         i.ion-locked
                                     .lessons-item__text Извените данный урок закрыт для вас. Нужно решить предыдущий. Мы ждём вас!
-                                .lesson-item__content(:class="{ blur: !lesson.enabled }")
+                                transition(name="fade")
+                                    .lesson-informations(v-if="lesson.isDesc")
+                                        i.ion-ios-close.lesson-informations__close(@click="lesson.isDesc = false")
+                                        .lesson-informations__container
+                                            h6.lesson-informations__title {{ lesson.title }}
+                                            .lesson-informations__block
+                                                p.lesson-informations__desc {{ lesson.desc }}
+                                            .lesson-informations__author
+                                                img(:src="'images/avatars/'+ lesson.author.avatar").lesson-informations__avatar
+                                                span.lesson-informations__nickname {{ lesson.author.nickname }}
+                                            span.lesson-informations__date {{ lesson.date }}
+                                .lesson-item__content(:class="{ blur: !lesson.enabled || lesson.isDesc }")
                                     .lesson-item__top
                                         img(:src="'lessons/'+ $route.params.id +'/'+ index +'/'+ lesson.bg_name").lesson-item__img
                                         span.lesson-item__status(:style="{ background: lesson.progress.status.color }") {{ lesson.progress.status.text }}
                                         span.lesson-item__like(@click="lesson.isLiked = !lesson.isLiked")
                                             i.ion-android-favorite-outline(v-if="!lesson.isLiked")
                                             i.ion-android-favorite.lesson-item__like_active(v-if="lesson.isLiked")
-                                        .lesson-item__progress(:style="{ width: setProgress(lesson).width, background: setProgress(lesson).background }")
-                                            .lesson-item__inner
+                                        .lesson-item__progress
+                                            .lesson-item__inner(:style="{ width: setProgress(lesson).width, background: setProgress(lesson).background }")
                                     .lesson-item__center
                                         h6.lesson-item__title {{ lesson.title }}
                                         //p.lesson-item__desc {{ lesson.desc | cutText }}
@@ -60,7 +71,7 @@
                                             span.lesson-item__more +7 mor
                                         .lesson-desc {{ lesson.desc | cutText }}
                                     .lesson-item__buttons
-                                        .lesson-item__details
+                                        .lesson-item__details(@click="lesson.isDesc = true")
                                             i.ion-ios-book-outline
                                         .lesson-item__start
                                             i.ion-ios-arrow-thin-right
@@ -74,6 +85,7 @@
 
     /*
         TODO: Устранить возможность зайти по ссылке даже если данный курс недоступен
+        TODO: Если через dev-tools убрать overlay у заблокированного урока, то его можно использовать
      */
 
     import Vue from 'vue'
@@ -85,43 +97,11 @@
     export default {
         data () {
             return {
+                routeID: {
+                    id: this.$route.params.id
+                },
                 profile: {},
-                lessons: [
-                    {
-                        title: 'Введение в HTML',
-                        desc: 'Chicken breasts combines greatly with sticky lentils. Talis burgus inciviliter quaestios vigil est. Heu, hydra! Yuck, never crush a lass.',
-                        bg_name: 'post_bg.png',
-                        views: 1784,
-                        parent: 0,
-                        enabled: true,
-                        isLiked: true,
-                        progress: {
-                            countStep: 76,
-                            currentStep: 65,
-                            status: {
-                                color: '#ffed32',
-                                text: 'Finished'
-                            }
-                        },
-                    },
-                    {
-                        title: 'Позиционирование',
-                        desc: 'Yes, there is heavens, it listens with solitude.',
-                        bg_name: 'post_bg.png',
-                        views: 1642,
-                        parent: 1,
-                        enabled: false,
-                        liked: false,
-                        progress: {
-                            countStep: 100,
-                            currentStep: 0,
-                            status: {
-                                color: '#fff',
-                                text: 'Ongoing'
-                            }
-                        },
-                    },
-                ]
+                lessons: []
             }
         },
         methods: {
@@ -132,6 +112,14 @@
                 }, (err) => {
                     console.log(err);
                 });
+            },
+            getLessons () {
+                this.$http.post("http://localhost:2000/getLessons", this.routeID, {emulateJSON: true}).then((res) => {
+                    this.lessons = res.data.paths;
+                    console.log(res)
+                }, (err) => {
+                    console.log(err)
+                })
             },
             setProgress(lesson) {
                 let width = lesson.progress.currentStep / lesson.progress.countStep * 100;
@@ -159,7 +147,8 @@
 //            }
         },
         mounted () {
-            this.getSession()
+            this.getSession();
+            this.getLessons();
             //console.log(this.setProgress({currentStep: 34, countStep: 76}))
         },
         filters: {
@@ -312,6 +301,9 @@
         width: 100%
         height: 5px
 
+    .lesson-item__inner
+        height: 100%
+
     .lesson-item__center
         padding: 15px
         position: relative
@@ -344,17 +336,6 @@
         color: #373737
         font-size: 12px
 
-    .lesson-reward
-        color: #808080
-
-    .lesson-reward__exp
-        padding-left: 10px
-        margin: 10px 0
-        font-size: 14px
-        div
-            i
-                font-size: 20px
-                margin-right: 7px
 
     .lesson-item__people
         width: 35px
@@ -427,7 +408,7 @@
         top: 0
         width: 100%
         height: 100%
-        background: rgba(14, 14, 14, 0.51)
+        background: rgba(14, 14, 14, 0.5)
         color: #ffffff
         z-index: 10
         text-align: center
@@ -454,6 +435,75 @@
         i
             font-size: 22px
             margin-right: 7px
+
+    .lesson-informations
+        position: absolute
+        z-index: 10
+        left: 0
+        top: 0
+        width: 100%
+        height: 100%
+        background: rgba(14, 14, 14, 0.5)
+
+    .lesson-informations__close
+        position: absolute
+        top: 10px
+        right: 15px
+        font-size: 20px
+        color: #888888
+        
+    .lesson-informations__container
+        padding: 10px
+        color: #ffffff
+
+    .lesson-informations__title
+        font-weight: 500
+        font-size: 14px
+        margin-top: 20px
+
+    .lesson-informations__block
+        padding: 10px
+        background: #f6f6f6
+        border: 1px solid #000
+
+    .lesson-informations__desc
+        font-size: 12px
+        font-weight: 400
+        color: #111111
+
+    .lesson-informations__author
+        margin-top: 10px
+        display: flex
+        justify-content: center
+        align-items: center
+
+    .lesson-informations__avatar
+        width: 40px
+        height: 40px
+        -webkit-border-radius: 50%
+        -moz-border-radius: 50%
+        border-radius: 50%
+        margin-right: 15px
+
+    .lesson-informations__nickname
+        font-size: 14px
+        color: #ffffff
+        font-weight: 400
+
+    .lesson-informations__date
+        position: absolute
+        bottom: 10px
+        right: 10px
+        font-size: 12px
+        color: #eeeeee
+        font-weight: 500
+
+    .fade-enter-active, .fade-leave-active
+        transition: opacity .5s
+
+    .fade-enter, .fade-leave-to
+        opacity: 0
+
 
 
     .blur

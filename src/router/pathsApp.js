@@ -2,6 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import User from '../model/User'
 import Nodes from '../model/Nodes'
+import Lessons from '../model/Lessons'
 
 let router = express.Router();
 
@@ -11,6 +12,7 @@ let urlencoded = bodyParser.urlencoded({
 
 let user = new User();
 let node = new Nodes();
+let lesson = new Lessons();
 
 router.get('/app', (req, res) => {
     res.render('application');
@@ -48,13 +50,19 @@ router.post('/profileAuto', (req, res) => {
             ]
         }
     };
-
-
     res.send(obj);
 });
 
 router.post('/getSession',urlencoded, (req, res) => {
     res.send(req.session.profile);
+});
+
+router.post('/getLessons',urlencoded, (req, res) => {
+    lesson.getLessons(req.body.id).then((resolve) => {
+        res.send(resolve);
+    }, (reject) => {
+        res.send(reject);
+    });
 });
 
 router.post('/getNodes',urlencoded, (req, res) => {
@@ -70,6 +78,7 @@ router.post('/getSessionAuto',urlencoded, (req, res) => {
 });
 
 router.post('/register', urlencoded, (req, res) => {
+    console.log(req.body)
     user.register(req.body).then( (resolve) => {
         res.send(resolve);
     }, (reject) => {
@@ -79,7 +88,8 @@ router.post('/register', urlencoded, (req, res) => {
 
 router.post('/auth', urlencoded, (req, res) => {
     user.auth(req.body).then( (resolve) => {
-        req.session.profile = resolve.object;
+        req.session.profile = resolve.object
+
         req.session.profile.visit++;
         res.send(resolve);
     }, (reject) => {
