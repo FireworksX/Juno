@@ -40,7 +40,18 @@ router.post('/profileAuto', (req, res) => {
                 {
                     name: 'html',
                     enabled: true,
-                    id: 0
+                    id: 0,
+                    lessons: [
+                        {
+                            enabled: true,
+                            countStep: 100,
+                            currentStep: 35,
+                            status: {
+                                color: '#ffed32',
+                                text: 'Finished'
+                            }
+                        }
+                    ]
                 },
                 {
                     name: 'js',

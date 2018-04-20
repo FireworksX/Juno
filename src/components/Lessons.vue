@@ -36,10 +36,10 @@
                     .row
                         li.lessons-item.col-lg-3(v-for="(lesson, index) in lessons")
                             .lessons-item__wrapper
-                                .lessons-item__lock(v-if="!lesson.enabled")
+                                .lessons-item__lock(v-if="!lesson.progress.enabled")
                                     div.lessons-item__icon
                                         i.ion-locked
-                                    .lessons-item__text Извените данный урок закрыт для вас. Нужно решить предыдущий. Мы ждём вас!
+                                    .lessons-item__text Извените данный урок закрыт для вас. Нужно решить предыдущий. Мы ждём вас! [{{ lesson.progress }}]
                                 transition(name="fade")
                                     .lesson-informations(v-if="lesson.isDesc")
                                         i.ion-ios-close.lesson-informations__close(@click="lesson.isDesc = false")
@@ -51,10 +51,10 @@
                                                 img(:src="'images/avatars/'+ lesson.author.avatar").lesson-informations__avatar
                                                 span.lesson-informations__nickname {{ lesson.author.nickname }}
                                             span.lesson-informations__date {{ lesson.date }}
-                                .lesson-item__content(:class="{ blur: !lesson.enabled || lesson.isDesc }")
+                                .lesson-item__content(:class="{ blur: !lesson.progress.enabled || lesson.isDesc }")
                                     .lesson-item__top
                                         img(:src="'lessons/'+ $route.params.id +'/'+ index +'/'+ lesson.bg_name").lesson-item__img
-                                        span.lesson-item__status(:style="{ background: lesson.progress.status.color }") {{ lesson.progress.status.text }}
+                                        //span.lesson-item__status(:style="{ background: lesson.progress.status.color }") {{ lesson.progress.status.text }}
                                         span.lesson-item__like(@click="lesson.isLiked = !lesson.isLiked")
                                             i.ion-android-favorite-outline(v-if="!lesson.isLiked")
                                             i.ion-android-favorite.lesson-item__like_active(v-if="lesson.isLiked")
@@ -98,7 +98,15 @@
         data () {
             return {
                 routeID: {
-                    id: this.$route.params.id
+                    id: this.$route.params.id,
+                },
+                progress: {
+                    countStep: 76,
+                    currentStep: 65,
+                    status: {
+                        color: '#ffed32',
+                        text: 'Finished'
+                    }
                 },
                 profile: {},
                 lessons: []
@@ -106,9 +114,9 @@
         },
         methods: {
             getSession () {
-                this.$http.post("http://localhost:2000/getSessionAuto").then((res) => {
+                this.$http.post("http://localhost:2000/profileAuto").then((res) => {
                     this.profile = res.data;
-                    console.log(this.profile)
+                    this.getLessons();
                 }, (err) => {
                     console.log(err);
                 });
@@ -116,10 +124,20 @@
             getLessons () {
                 this.$http.post("http://localhost:2000/getLessons", this.routeID, {emulateJSON: true}).then((res) => {
                     this.lessons = res.data.paths;
-                    console.log(res)
+                    this.pushPersonalData();
                 }, (err) => {
                     console.log(err)
                 })
+            },
+            pushPersonalData() {
+                let i = 0;
+                for(let key of this.profile.progress.nodes[this.$route.params.id].lessons){
+                    if(key){
+                        this.lessons[i].progress = key;
+                    }
+                    i++;
+                }
+                console.log(this.lessons)
             },
             setProgress(lesson) {
                 let width = lesson.progress.currentStep / lesson.progress.countStep * 100;
@@ -142,14 +160,10 @@
             }
         },
         computed: {
-//            setProgress: () => {
-//                return {width: '34%', background: '#000'}
-//            }
+
         },
         mounted () {
             this.getSession();
-            this.getLessons();
-            //console.log(this.setProgress({currentStep: 34, countStep: 76}))
         },
         filters: {
             cutText: (value) => {
