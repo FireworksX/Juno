@@ -80,7 +80,9 @@ class User {
             });
         });
     }
-
+    /*
+        TODO: Добавить функцию Remove и Update
+     */
     register(obj) {
         return new Promise((resolve, reject) => {
             let newUser = regSchema({

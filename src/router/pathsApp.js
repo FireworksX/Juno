@@ -54,7 +54,7 @@ router.post('/profileAuto', (req, res) => {
 });
 
 router.post('/getSession',urlencoded, (req, res) => {
-    res.send(req.session.profile)
+    res.send(req.session.profile);
 });
 
 router.post('/getNodes',urlencoded, (req, res) => {

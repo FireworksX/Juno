@@ -32,6 +32,7 @@
             getSession () {
                 this.$http.post("http://localhost:2000/profileAuto").then( (res) => {
                     this.profile = res.data;
+                    console.log(res)
                     this.getNodes();
                 }, (err) => {
                     console.log(err);
@@ -40,6 +41,7 @@
             getNodes () {
                 this.$http.post("http://localhost:2000/getNodes").then( (res) => {
                     this.nodes = res.data.object;
+                    console.log(res.data)
                     this.pushPersonalData();
                     new DrawPaths('.paper', this.nodes).render();
                 }, (err) => {

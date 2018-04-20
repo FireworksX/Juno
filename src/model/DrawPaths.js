@@ -20,6 +20,9 @@ class DrawPaths {
         let parentId = this.node.parent;
         let parentObj = this.nodes[parentId];
         let {cx, cy, cr} = parentObj.position;
+        /*
+            TODO: Устранить ошибку, наверное связано с тем что выполняется отрисовка нод с пустыми данными
+         */
         let path = this.paper.path(`M${this.node.position.cx + this.node.position.cr},${this.node.position.cy + this.node.position.cr} L${cx + cr},${cy + cr}`);
         path.attr({
             stroke: '#000',

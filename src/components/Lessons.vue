@@ -43,22 +43,38 @@
                                 .lesson-item__content(:class="{ blur: !lesson.enabled }")
                                     .lesson-item__top
                                         img(:src="'lessons/'+ $route.params.id +'/'+ index +'/'+ lesson.bg_name").lesson-item__img
-                                        span.lesson-item__status(:style="{ background: lesson.status.color }") {{ lesson.status.text }}
+                                        span.lesson-item__status(:style="{ background: lesson.progress.status.color }") {{ lesson.progress.status.text }}
+                                        span.lesson-item__like(@click="lesson.isLiked = !lesson.isLiked")
+                                            i.ion-android-favorite-outline(v-if="!lesson.isLiked")
+                                            i.ion-android-favorite.lesson-item__like_active(v-if="lesson.isLiked")
+                                        .lesson-item__progress(:style="{ width: setProgress(lesson).width, background: setProgress(lesson).background }")
+                                            .lesson-item__inner
                                     .lesson-item__center
                                         h6.lesson-item__title {{ lesson.title }}
-                                        .lesson-item__peoples
-                                            img(src="lessons/0/0/avatar1.jpg").lesson-item__people
-                                            img(src="lessons/0/0/avatar2.jpg").lesson-item__people
-                                            img(src="lessons/0/0/avatar3.jpg").lesson-item__people
-                                            img(src="lessons/0/0/avatar4.jpg").lesson-item__people
-                                            span.lesson-item__more +7 more
+                                        //p.lesson-item__desc {{ lesson.desc | cutText }}
+                                        //.lesson-item__people
+                                            img(src="lessons/0/0/avatar1.jpg").lesson-item__peopl
+                                            img(src="lessons/0/0/avatar2.jpg").lesson-item__peopl
+                                            img(src="lessons/0/0/avatar3.jpg").lesson-item__peopl
+                                            img(src="lessons/0/0/avatar4.jpg").lesson-item__peopl
+                                            span.lesson-item__more +7 mor
+                                        .lesson-desc {{ lesson.desc | cutText }}
                                     .lesson-item__buttons
-                                        .lesson-item__start Начать
-                                        .lesson-item__details Подробнее
+                                        .lesson-item__details
+                                            i.ion-ios-book-outline
+                                        .lesson-item__start
+                                            i.ion-ios-arrow-thin-right
+                                    span.lesson-item__views
+                                        i.ion-ios-eye
+                                        |{{ lesson.views }}
 
 </template>
 
 <script>
+
+    /*
+        TODO: Устранить возможность зайти по ссылке даже если данный курс недоступен
+     */
 
     import Vue from 'vue'
     import Person_small from '../components/Person_small.vue';
@@ -73,23 +89,37 @@
                 lessons: [
                     {
                         title: 'Введение в HTML',
+                        desc: 'Chicken breasts combines greatly with sticky lentils. Talis burgus inciviliter quaestios vigil est. Heu, hydra! Yuck, never crush a lass.',
                         bg_name: 'post_bg.png',
+                        views: 1784,
                         parent: 0,
                         enabled: true,
-                        status: {
-                            color: '#ffed32',
-                            text: 'Finished'
-                        }
+                        isLiked: true,
+                        progress: {
+                            countStep: 76,
+                            currentStep: 65,
+                            status: {
+                                color: '#ffed32',
+                                text: 'Finished'
+                            }
+                        },
                     },
                     {
                         title: 'Позиционирование',
+                        desc: 'Yes, there is heavens, it listens with solitude.',
                         bg_name: 'post_bg.png',
+                        views: 1642,
                         parent: 1,
                         enabled: false,
-                        status: {
-                            color: '#fff',
-                            text: 'Ongoing'
-                        }
+                        liked: false,
+                        progress: {
+                            countStep: 100,
+                            currentStep: 0,
+                            status: {
+                                color: '#fff',
+                                text: 'Ongoing'
+                            }
+                        },
                     },
                 ]
             }
@@ -103,9 +133,39 @@
                     console.log(err);
                 });
             },
+            setProgress(lesson) {
+                let width = lesson.progress.currentStep / lesson.progress.countStep * 100;
+                let widthPerCent = `${lesson.progress.currentStep / lesson.progress.countStep * 100}%`;
+                let background = '';
+                if(width < 25){
+                    background = '#fd5c4a'
+                }else if(width >= 25 && width <= 50){
+                    background = '#e09b76'
+                }else if(width > 50 && width < 75){
+                    background = '#e8c96f'
+                }else if(width >= 75){
+                    background = '#a0ca4c'
+                }
+                let obj = {
+                    width: widthPerCent,
+                    background
+                };
+                return obj;
+            }
+        },
+        computed: {
+//            setProgress: () => {
+//                return {width: '34%', background: '#000'}
+//            }
         },
         mounted () {
             this.getSession()
+            //console.log(this.setProgress({currentStep: 34, countStep: 76}))
+        },
+        filters: {
+            cutText: (value) => {
+                return value.slice(0, 50) + '...'
+            }
         }
     }
 
@@ -116,7 +176,7 @@
     .lessons
         width: 100%
         height: 100%
-        background: #f5f5f5
+        background: #F9FAFF
         font-family: 'Montserrat', sans-serif
 
     .lessons-statistics
@@ -224,6 +284,9 @@
         box-shadow: 0px 20px 20px 0px rgba(78, 100, 134, 0.5)
         position: relative
 
+    .lesson-item__content
+        position: relative
+
     .lesson-item__top
         position: relative
 
@@ -244,13 +307,54 @@
         -moz-border-radius: 12px
         border-radius: 12px
 
+    .lesson-item__progress
+        background: #ececec
+        width: 100%
+        height: 5px
+
     .lesson-item__center
         padding: 15px
+        position: relative
+
+    .lesson-item__like
+        position: absolute
+        right: 10px
+        top: 10px
+        color: #fff
+        font-size: 25px
+
+    .lesson-item__like_active
+        color: #fd5c4a
 
     .lesson-item__title
-        font-weight: 700
+        font-weight: 600
         font-size: 16px
         margin-bottom: 10px
+        color: #777
+        
+    .lesson-item__desc
+        font-size: 14px
+        font-weight: 500
+        color: #808080
+        
+    .lesson-desc
+        padding: 7px
+        border: 1px solid #d6d6d6
+        background: #f6f6f6
+        color: #373737
+        font-size: 12px
+
+    .lesson-reward
+        color: #808080
+
+    .lesson-reward__exp
+        padding-left: 10px
+        margin: 10px 0
+        font-size: 14px
+        div
+            i
+                font-size: 20px
+                margin-right: 7px
 
     .lesson-item__people
         width: 35px
@@ -277,26 +381,45 @@
 
     .lesson-item__buttons
         display: flex
-        margin-top: 30px
+        justify-content: flex-end
+        margin-bottom: 20px
 
     .lesson-item__start, .lesson-item__details
-        width: 50%
+        width: 40px
+        height: 40px
         padding: 10px 0
-        font-size: 14px
-        color: #777
-        font-weight: 700
+        font-size: 20px
+        color: #fff
+        font-weight: 400
         text-align: center
         position: relative
         cursor: pointer
+        display: flex
+        justify-content: center
+        align-items: center
+        -webkit-border-radius: 50%
+        -moz-border-radius: 50%
+        border-radius: 50%
+        -webkit-box-shadow: 0px 20px 20px 0px rgba(78, 100, 134, 0.5)
+        -moz-box-shadow: 0px 20px 20px 0px rgba(78, 100, 134, 0.5)
+        box-shadow: 0px 20px 20px 0px rgba(78, 100, 134, 0.5)
+        transition: .3s
 
     .lesson-item__start
-        &:after
-            content: ' '
-            width: 1px
-            height: 20px
-            background: #777777
-            position: absolute
-            right: 0
+        background: #89E253
+        margin-right: 15px
+        &:hover
+            i
+                transition: .3s
+                transform: translateX(3px)
+
+    .lesson-item__details
+        background: #3FADF3
+        margin-right: 10px
+        &:hover
+            i
+                transition: .3s
+                transform: translateY(3px)
 
     .lessons-item__lock
         position: absolute
@@ -319,6 +442,19 @@
         font-weight: 500
         padding: 20px
         margin-top: 10px
+
+    .lesson-item__views
+        position: absolute
+        bottom: 6px
+        left: 20px
+        display: flex
+        font-weight: 500
+        font-size: 14px
+        color: #515151
+        i
+            font-size: 22px
+            margin-right: 7px
+
 
     .blur
         filter: blur(5px)

@@ -93,6 +93,10 @@ var User = function () {
                 });
             });
         }
+        /*
+            TODO: Добавить функцию Remove и Update
+         */
+
     }, {
         key: 'register',
         value: function register(obj) {

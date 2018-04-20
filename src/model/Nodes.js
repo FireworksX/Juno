@@ -15,8 +15,12 @@ const Node = mongoose.model('Node', {
     },
     styles: {
         fill: String,
-        shadow: Boolean
-    }
+        shadow: Boolean,
+        left: String,
+        top: String,
+        width: String,
+        height: String
+    },
 });
 
 
@@ -38,7 +42,9 @@ class Nodes {
             })
         });
     }
-
+    /*
+        TODO: Добавить функцию для выборочной загрузки ноды и для загрузки случайной ноды
+     */
     nodeRegister (obj) {
         /*
             Пример принимаемого объекта
