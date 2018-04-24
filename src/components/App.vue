@@ -4,7 +4,7 @@
         ul.application-container
             svg.paper
             li.application-container__item(v-for="(node, index) in nodes" v-bind:style="node.styles" v-on:click="selectLesson(index)" v-bind:class="{node_unlock: node.progress.enabled}")
-                |{{ node.name }}
+                |{{ node.name | capitalize }}
 </template>
 
 <script>
@@ -26,6 +26,13 @@
                 profile: {},
                 nodes: [],
                 enabled: true
+            }
+        },
+        filters: {
+            capitalize: function (value) {
+                if (!value) return ''
+                value = value.toString()
+                return value.charAt(0).toUpperCase() + value.slice(1)
             }
         },
         methods: {

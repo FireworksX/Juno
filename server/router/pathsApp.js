@@ -97,10 +97,6 @@ router.post('/getNodes', urlencoded, function (req, res) {
     });
 });
 
-router.post('/getSessionAuto', urlencoded, function (req, res) {
-    res.send({ firstName: 'John', login: 'spaceman' });
-});
-
 router.post('/register', urlencoded, function (req, res) {
     console.log(req.body);
     user.register(req.body).then(function (resolve) {
@@ -113,7 +109,6 @@ router.post('/register', urlencoded, function (req, res) {
 router.post('/auth', urlencoded, function (req, res) {
     user.auth(req.body).then(function (resolve) {
         req.session.profile = resolve.object;
-
         req.session.profile.visit++;
         res.send(resolve);
     }, function (reject) {
@@ -121,4 +116,9 @@ router.post('/auth', urlencoded, function (req, res) {
     });
 });
 
+/* HOME */
+
+router.get('/', function (req, res) {
+    res.render('home');
+});
 module.exports = router;

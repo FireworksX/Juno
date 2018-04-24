@@ -42,6 +42,20 @@ class Nodes {
             })
         });
     }
+
+    getRandomNodes(){
+        return new Promise( (resolve, reject) => {
+           Node.find({}, (err, result) => {
+               if(err)
+                   reject(err);
+
+               if(result !== null){
+                   let index = Math.floor(Math.random() * result.length);
+                   resolve(result[index]);
+               }
+            });
+        });
+    }
     /*
         TODO: Добавить функцию для выборочной загрузки ноды и для загрузки случайной ноды
      */

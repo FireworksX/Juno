@@ -1,0 +1,20 @@
+body {
+  background: #e4f0ff;
+}
+
+#form__overlay{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+
+.particles_blur{
+  filter: blur(10px)
+}
+
+.particles_blur{
+  filter: blur(5px);
+}

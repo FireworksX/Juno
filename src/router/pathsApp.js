@@ -80,12 +80,8 @@ router.post('/getNodes',urlencoded, (req, res) => {
     node.getNodes().then( (resolve) => {
         res.send(resolve);
     }, (reject) => {
-       res.send(reject);
+      res.send(reject);
     });
-});
-
-router.post('/getSessionAuto',urlencoded, (req, res) => {
-    res.send({firstName: 'John', login: 'spaceman'});
 });
 
 router.post('/register', urlencoded, (req, res) => {
@@ -99,8 +95,7 @@ router.post('/register', urlencoded, (req, res) => {
 
 router.post('/auth', urlencoded, (req, res) => {
     user.auth(req.body).then( (resolve) => {
-        req.session.profile = resolve.object
-
+        req.session.profile = resolve.object;
         req.session.profile.visit++;
         res.send(resolve);
     }, (reject) => {
@@ -108,5 +103,9 @@ router.post('/auth', urlencoded, (req, res) => {
     });
 });
 
+/* HOME */
 
+router.get('/', (req, res) => {
+   res.render('home');
+});
 module.exports = router;

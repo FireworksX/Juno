@@ -37,7 +37,7 @@ class Lessons {
         return new Promise( (resolve, reject) => {
             lessonModel.find({}, (err, result) => {
                 if(err)
-                    reject({text: 'Ошибка на сервере' + err});
+                    reject({text: 'Ошибка на сервере [' + err + ']'});
 
                 resolve(result[id]);
             });

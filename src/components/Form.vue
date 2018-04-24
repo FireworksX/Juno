@@ -41,6 +41,10 @@
 </template>
 
 <script>
+    /*
+        TODO: Упростить логику, разбить на модули более мелко
+     */
+
     import Vue from 'vue'
     import VueResource from 'vue-resource'
     import SHA256 from 'crypto-js/sha256'

@@ -31,7 +31,7 @@
             //                            span.lessons-body__count_bold 438
                                         |На этой неделе
             .lessons-wrapper
-                h4.lessons-wrapper__head 7 Lessons found
+                h4.lessons-wrapper__head {{ lessons.length }} Lessons found
                 ul.lessons-wrapper__list
                     .row
                         li.lessons-item.col-lg-3(v-for="(lesson, index) in lessons")
@@ -39,7 +39,7 @@
                                 .lessons-item__lock(v-if="!lesson.progress.enabled")
                                     div.lessons-item__icon
                                         i.ion-locked
-                                    .lessons-item__text Извените данный урок закрыт для вас. Нужно решить предыдущий. Мы ждём вас! [{{ lesson.progress }}]
+                                    .lessons-item__text Извените данный урок закрыт для вас. Нужно решить предыдущий. Мы ждём вас!
                                 transition(name="fade")
                                     .lesson-informations(v-if="lesson.isDesc")
                                         i.ion-ios-close.lesson-informations__close(@click="lesson.isDesc = false")
@@ -99,14 +99,6 @@
             return {
                 routeID: {
                     id: this.$route.params.id,
-                },
-                progress: {
-                    countStep: 76,
-                    currentStep: 65,
-                    status: {
-                        color: '#ffed32',
-                        text: 'Finished'
-                    }
                 },
                 profile: {},
                 lessons: []
