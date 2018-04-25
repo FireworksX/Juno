@@ -27,34 +27,40 @@
                     input.form__input(type="text" v-model="personalData.login" v-if="inputs.step === 0")(@input="_checkInputs")
                     input.form__input(type="password" v-model="personalData.pass" v-if="inputs.step === 1")(@input="_checkInputs")
                     .form__line
-        .form-alert(v-if="alert.enabled")
-            .form-alert__body
-                .form-alert__overlay(:style="{ background: alert[alert.type].color }")
-                img(:src="alert[alert.type].image").form-alert__img
-                .form-alert__container
-                    img(src="images/wave.png").form-alert__wave
-                    .form-alert__head {{ alert[alert.type].head }}
-                    p.form-alert__desc {{ alert.text }}
-                    .form-alert__btn(@click="changeType('choose')") {{ alert[alert.type].btnText }}
+        modal-success(:settings="modal_success_settings")
+        modal-failed(:settings="modal_failed_settings")
 
 
 </template>
 
 <script>
-    /*
-        TODO: Упростить логику, разбить на модули более мелко
-     */
 
     import Vue from 'vue'
     import VueResource from 'vue-resource'
     import SHA256 from 'crypto-js/sha256'
+    import Modal_success from './Modal_success.vue'
+    import Modal_failed from './Modal_failed.vue'
 
     Vue.use(VueResource);
 
+    Vue.component('modal-success', Modal_success);
+    Vue.component('modal-failed', Modal_failed);
+
     export default {
-        //props: ['enabled'],
         data () {
             return {
+                modal_success_settings: {
+                    enabled: false,
+                    head: 'Замечательно!',
+                    btnText: 'Продолжить',
+                    text: 'test'
+                },
+                modal_failed_settings: {
+                    enabled: false,
+                    head: 'Упс! Ошибочка...',
+                    btnText: 'Попробовать снова',
+                    text: 'test'
+                },
                 enabled: true,
                 type: 'choose', //Types: register, auth, choose - choose auth or register
                 choose: {
@@ -96,23 +102,6 @@
                     code: null,
                     text: ''
                 },
-                alert: {
-                    enabled: false,
-                    type: 'success',
-                    text: '',
-                    failed: {
-                        head: 'Упс! Ошибочка...',
-                        color: '#f89da8',
-                        image: 'images/failed.png',
-                        btnText: 'Попробовать снова'
-                    },
-                    success: {
-                        head: 'Замечательно!',
-                        color: '#82eac5',
-                        image: 'images/success.png',
-                        btnText: 'Продолжить'
-                    }
-                }
             }
         },
         computed: {
@@ -254,9 +243,13 @@
                 this.personalData.pass = this.encrypt('pass');
                 this.$http.post("http://localhost:2000/register", this.personalData, {emulateJSON: true}).then( (res) => {
                     this.response = res.data;
-                    this.alert.type = res.data.type;
-                    this.alert.text = res.data.text;
-                    this.alert.enabled = true;
+                    if(res.data.type === 'success'){
+                        this.modal_success_settings.enabled = true;
+                        this.modal_success_settings.text = res.data.text;
+                    }else if(res.data.type === 'failed'){
+                        this.modal_failed_settings.enabled = true;
+                        this.modal_failed_settings.text = res.data.text;
+                    }
                     this.register.enabled = false;
                 }, (err) => {
                     console.log(err);
@@ -397,94 +390,7 @@
         font-weight: 700
         text-align: center
 
-    /* Alert */
 
-    .form-alert
-        width: 400px
-        background: #ffffff
-        -webkit-border-radius: 7px
-        -moz-border-radius: 7px
-        border-radius: 7px
-        overflow: hidden
-        -webkit-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
-        -moz-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
-        box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
-
-    .form-alert__body
-        position: relative
-
-    .form-alert__img
-        width: 400px
-        z-index: 5
-        position: relative
-
-    .form-alert__overlay
-        position: absolute
-        top: 0
-        left: 0
-        width: 100%
-        height: 100%
-        background: #f89da8
-        z-index: 4
-
-    .form-alert__container
-        padding: 15px 20px 20px 20px
-        background: #fff
-        position: relative
-        z-index: 6
-        text-align: center
-
-    .form-alert__wave
-        width: 100%
-        position: absolute
-        top: -30px
-        left: 0
-
-    .form-alert__head
-        font-weight: 700
-        font-size: 24px
-        color: #244555
-        position: relative
-        margin-bottom: 30px
-        display: inline-block
-        &:after
-            content: ' '
-            width: 50px
-            height: 4px
-            -webkit-border-radius: 5px
-            -moz-border-radius: 5px
-            border-radius: 5px
-            background: #c1cbcf
-            position: absolute
-            left: 50%
-            margin-left: -25px
-            bottom: -10px
-
-    .form-alert__desc
-        font-weight: 400
-        color: #244555
-        padding: 0 15px
-        margin-bottom: 30px
-        line-height: 25px
-    
-    .form-alert__btn
-        font-weight: 400
-        padding: 15px 30px
-        font-size: 14px
-        background: #a3c6f1
-        text-transform: uppercase
-        display: inline-block
-        color: #fff
-        -webkit-border-radius: 5px
-        -moz-border-radius: 5px
-        border-radius: 5px
-        -webkit-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
-        -moz-box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
-        box-shadow: 0px 8px 60px 0px rgba(0, 0, 0, 0.2)
-        cursor: pointer
-        transition: background .3s
-        &:hover
-            background: #88a8d3
 
     /* Choose Block */
 
