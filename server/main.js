@@ -34,7 +34,8 @@ var _vueResource2 = _interopRequireDefault(_vueResource);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-particlesJS.load('form__overlay', 'particlesjs-config.json');
+//particlesJS.load('form__overlay', 'particlesjs-config.json');
+
 
 _vue2.default.use(_vueResource2.default);
 _vue2.default.use(_vueRouter2.default);
@@ -74,4 +75,10 @@ var vm = new _vue2.default({
         // this.$router.replace(`/lessons/0`);
         // this.particlesBlur = false;
     }
+});
+
+var socket = io.connect('http://localhost:2000');
+socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
 });

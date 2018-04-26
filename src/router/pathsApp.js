@@ -108,4 +108,5 @@ router.post('/auth', urlencoded, (req, res) => {
 router.get('/', (req, res) => {
    res.render('home');
 });
+
 module.exports = router;

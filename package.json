@@ -10,7 +10,8 @@
     "pack": "webpack --watch",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "babel": "babel src -d server --presets es2015 -w",
-    "serverStart": "nodemon server/server.js"
+    "serverStart": "nodemon server/server.js",
+    "start": "concurrently --kill-others \"npm run pack\" \"npm run babel\" \"npm run serverStart\""
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -30,7 +31,9 @@
     "request": "^2.79.0",
     "sass-loader": "^6.0.7",
     "snapsvg": "^0.5.1",
+    "socket.io": "^2.1.0",
     "style-loader": "^0.20.3",
+    "three": "^0.92.0",
     "vue": "^2.5.11",
     "vue-resource": "^1.5.0",
     "vue-router": "^3.0.1"
@@ -49,6 +52,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "bower": "^1.8.2",
     "browser-sync": "^2.18.13",
+    "concurrently": "^3.5.1",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.11",
     "extract-text-webpack-plugin": "^3.0.2",

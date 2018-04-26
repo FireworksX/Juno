@@ -30,9 +30,11 @@ var _pathsApp2 = _interopRequireDefault(_pathsApp);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var app = (0, _express2.default)();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 //Save paths for app [page]
 
-var app = (0, _express2.default)();
 
 var urlEncodeParser = _bodyParser2.default.urlencoded({
     extended: false
@@ -46,7 +48,7 @@ app.use((0, _expressSession2.default)({ secret: 'juno', resave: false, saveUnini
 
 app.use('/', _pathsApp2.default);
 
-app.listen(2000, function (err) {
+http.listen(2000, function (err) {
     if (err) {
         throw err;
     }
@@ -56,4 +58,11 @@ app.listen(2000, function (err) {
 _mongoose2.default.connect('mongodb://localhost/juno', function (err) {
     if (err) throw err;
     console.log('Mongoose conected');
+});
+
+io.on('connection', function (socket) {
+    socket.emit('news', { hello: 'world' });
+    socket.on('my other event', function (data) {
+        console.log(data);
+    });
 });

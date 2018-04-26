@@ -9,7 +9,7 @@ import App from './components/App.vue'
 import Lessons from './components/Lessons.vue'
 import VueResource from 'vue-resource'
 
-particlesJS.load('form__overlay', 'particlesjs-config.json');
+//particlesJS.load('form__overlay', 'particlesjs-config.json');
 
 
 
@@ -56,3 +56,8 @@ let vm = new Vue({
     }
 });
 
+var socket = io.connect('http://localhost:2000');
+socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+});
