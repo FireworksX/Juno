@@ -30,9 +30,9 @@
         },
         filters: {
             capitalize: function (value) {
-                if (!value) return ''
-                value = value.toString()
-                return value.charAt(0).toUpperCase() + value.slice(1)
+                if (!value) return '';
+                value = value.toString();
+                return value.charAt(0).toUpperCase() + value.slice(1);
             }
         },
         methods: {
@@ -48,7 +48,7 @@
             getNodes () {
                 this.$http.post("http://localhost:2000/getNodes").then( (res) => {
                     this.nodes = res.data.object;
-                    console.log(res.data)
+                    console.log(res.data);
                     this.pushPersonalData();
                     new DrawPaths('.paper', this.nodes).render();
                 }, (err) => {
@@ -109,6 +109,10 @@
         width: 100%
         height: 100%
         position: relative
+        transform-origin: center center 0
+        transition: all 0.2s ease 0s
+        -webkit-transform-origin: center center 0
+        -webkit-transition: all 0.2s ease 0s
 
     .application-container__item
         width: 80px
@@ -124,7 +128,6 @@
         justify-content: center
         align-items: center
         color: #fff
-
 
     .node_unlock
         transition: .3s

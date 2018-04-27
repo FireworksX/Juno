@@ -1,5 +1,4 @@
-//
-
+import './main.sass'
 import 'particles.js'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -8,9 +7,9 @@ import Dashboard from './components/Dashboard.vue'
 import App from './components/App.vue'
 import Lessons from './components/Lessons.vue'
 import VueResource from 'vue-resource'
+//import $ from 'jquery'
 
 //particlesJS.load('form__overlay', 'particlesjs-config.json');
-
 
 
 Vue.use(VueResource);

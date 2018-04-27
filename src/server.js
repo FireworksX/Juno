@@ -27,7 +27,7 @@ app.use('/', appPaths);
 
 http.listen(2000, (err) => {
     if (err) {
-        throw err
+        throw err;
     }
     console.log('Server started on 2000 port');
 });

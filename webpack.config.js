@@ -18,10 +18,11 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-          'vue-style-loader',
-          'css-loader'
-        ],
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.sass/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
       },      {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -45,19 +46,24 @@ module.exports = {
           name: '[name].[ext]?[hash]'
         },
       },
-      {
-        test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: 'css-loader!sass-loader'
-        })
-      }
+      // {
+      //   test: /\.scss$/,
+      //   use: ExtractTextPlugin.extract({
+      //       fallback: 'style-loader',
+      //       use: 'css-loader!sass-loader'
+      //   })
+      // }
     ]
   },
   plugins: [
-      new ExtractTextPlugin('styles-[name].css'),
+      //new ExtractTextPlugin('styles-[name].css'),
       new webpack.DefinePlugin({
           "typeof window": "\"object\""
+      }),
+      new webpack.ProvidePlugin({
+          $: "jquery/dist/jquery.min.js",
+          jQuery: "jquery/dist/jquery.min.js",
+          "window.jQuery": "jquery/dist/jquery.min.js"
       })
   ],
   resolve: {
