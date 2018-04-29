@@ -1,6 +1,7 @@
 <template lang="pug">
     .lessons
         .container
+            lesson-audio
             //.lessons-statistics
             //    h4.lessons-statistics__title Статистика
             //    .lessons-statistics__container
@@ -90,8 +91,10 @@
 
     import Vue from 'vue'
     import Person_small from '../components/Person_small.vue';
+    import Lesson_audio from '../components/Lesson_audio.vue'
 
     Vue.component('person-small', Person_small);
+    Vue.component('lesson-audio', Lesson_audio);
 
 
     export default {
@@ -171,7 +174,7 @@
     .lessons
         width: 100%
         height: 100%
-        background: #F9FAFF
+        background: #000
         font-family: 'Montserrat', sans-serif
 
     .lessons-statistics

@@ -1,5 +1,6 @@
 <template lang="pug">
     .application
+        vignette
         person-small(:user="profile")
         ul.application-container
             svg.paper
@@ -11,12 +12,14 @@
     import Vue from 'vue'
     import VueResourse from 'vue-resource'
     import Person_small from '../components/Person_small.vue'
+    import Vignette from '../components/vignette.vue'
     import DrawPaths from '../model/DrawPaths'
 
 
     Vue.use(VueResourse);
 
     Vue.component('person-small', Person_small);
+    Vue.component('vignette', Vignette);
 
 
 

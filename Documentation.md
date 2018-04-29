@@ -151,8 +151,7 @@ SPA приложение рендерится внутрь `#app`. Подклю�
 Является точкой входа для Webpack и всего SPA. 
 В этот файт подключаются все компоненты Vue, задаётся роутинг (отслеживание путей) с помощью `vue-router` и инициализируется VueJS по адресу `#app` - из  [`application.pug`](#application.pug).
 ```js
-
-```import Vue from 'vue'  
+import Vue from 'vue'  
 import VueRouter from 'vue-router'  
 import Form from './components/Form.vue'  
 import Dashboard from './components/Dashboard.vue'  
@@ -185,3 +184,4 @@ let vm = new Vue({
 	    msg: 'some text'
 	}
 });
+```

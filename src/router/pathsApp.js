@@ -85,7 +85,7 @@ router.post('/getNodes',urlencoded, (req, res) => {
 });
 
 router.post('/register', urlencoded, (req, res) => {
-    console.log(req.body)
+    console.log(req.body);
     user.register(req.body).then( (resolve) => {
         res.send(resolve);
     }, (reject) => {

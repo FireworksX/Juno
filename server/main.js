@@ -36,8 +36,6 @@ var _vueResource2 = _interopRequireDefault(_vueResource);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//import $ from 'jquery'
-
 //particlesJS.load('form__overlay', 'particlesjs-config.json');
 
 
@@ -75,8 +73,8 @@ var vm = new _vue2.default({
         }
     },
     mounted: function mounted() {
-        this.getSession();
-        // this.$router.replace(`/lessons/0`);
+        //this.getSession();
+        this.$router.replace('/lessons/0');
         // this.particlesBlur = false;
     }
 });
