@@ -1,7 +1,8 @@
 <template lang="pug">
     .lessons
         .container
-            lesson-audio
+            .row
+                lesson-audio(:obj="audioTrack")
             //.lessons-statistics
             //    h4.lessons-statistics__title Статистика
             //    .lessons-statistics__container
@@ -100,6 +101,18 @@
     export default {
         data () {
             return {
+                audioTrack:{
+                    author: {
+                        name: 'Thomas',
+                        url: '/user/0'
+                    },
+                    timeAgo: 7,
+                    views: 23198,
+                    song: {
+                        url: 'http://dnl10.drivemusic.me/dl/online/6E7ySIYGe3BK7mjxEJiqMQ/1525066363/download_music/2013/08/m83-oblivion-ost-oblivion.mp3',
+                        title: 'Oblivion'
+                    }
+                },
                 routeID: {
                     id: this.$route.params.id,
                 },

@@ -1,12 +1,12 @@
 <template lang="pug">
-    .lesson-audio.col-lg-4
+    .lesson-audio.col-xs-4.col-lg-4.col-md-6.col-sm-12
         .lesson-audio__inner
             .lesson-audio__track
                 .lesson-audio__play(@click="toggleAudio")
                     i.ion-ios-play(v-if="track.toggle === 'play'")
                     i.ion-ios-pause(v-if="track.toggle === 'pause'")
                     svg.lesson-audio__progress
-                        circle(r="30" cx="33" cy="33" stroke="#bcff84" stroke-width="3" fill="transparent" stroke-linecap="round" stroke-dasharray="1" stroke-dashoffset="188")
+                        circle(r="30" cx="33" cy="33" stroke="#71728e" stroke-width="3" fill="transparent" stroke-linecap="round" stroke-dasharray="189" v-bind:stroke-dashoffset="track.offset")
                 .lesson-audio__waves
                     span.lesson-audio__wave.lesson-audio__wave_small
                     span.lesson-audio__wave.lesson-audio__wave_small
@@ -41,33 +41,57 @@
                     span.lesson-audio__wave.lesson-audio__wave_small
                     span.lesson-audio__wave.lesson-audio__wave_small
                     span.lesson-audio__wave.lesson-audio__wave_small
-            .lesson-audio__time 03:24
+            .lesson-audio__time {{ track.duration }}
             .lesson-audio__meta
-                .lesson-audio__title Soundtrack
+                .lesson-audio__title {{ obj.song.title }}
                 .lesson-audio__details
-                    span.lesson-audio__name Thomas
+                    span.lesson-audio__name {{ obj.author.name }}
                     span.lesson-audio__dot
-                    span.lesson-audio__along 12h ago
+                    span.lesson-audio__along {{ obj.timeAgo }}h ago
                     span.lesson-audio__dot
                     span.lesson-audio__comments
-                        i.ion-ios-chatbubble
-                        |6 comments
+                        i.ion-ios-eye
+                        |{{ obj.views }} view
 </template>
 
 <script>
+    /*
+        TODO: Добавить возможность плейлистов (несколько теков)
+     */
+
     export default {
         props: ['obj'],
         data () {
             return {
                 track: {
                     toggle: 'play',
+                    duration: '',
+                    offset: 189,
                     object: {}
                 }
             }
         },
         methods: {
             initAudio() {
-                this.track.object = new Audio('http://dnl10.drivemusic.me/dl/online/6E7ySIYGe3BK7mjxEJiqMQ/1525066363/download_music/2013/08/m83-oblivion-ost-oblivion.mp3')
+                this.track.object = new Audio(this.obj.song.url);
+//                let progress = setInterval(()=>{
+//                    this.track.offset = 189 - (this.track.object.currentTime / this.track.object.duration * 100);
+//                    if(this.track.offset === 0)
+//                        clearInterval(progress);
+//                }, 1000);
+                this.track.object.addEventListener('timeupdate', () => {
+                    this.track.offset = 189 - (this.track.object.currentTime / this.track.object.duration * 100);
+                });
+                this.track.object.addEventListener('loadedmetadata', () => {
+                    this.track.duration = this.track.object.duration;
+                    let s = this.track.duration % 60;
+                    let m = Math.floor( this.track.duration / 60 ) % 60;
+
+                    s = s < 10 ? "0"+s : s;
+                    m = m < 10 ? "0"+m : m;
+
+                    this.track.duration = `${m}:${Math.floor(s)}`
+                });
             },
             toggleAudio() {
                 if(this.track.toggle === 'play'){
@@ -86,6 +110,9 @@
 </script>
 
 <style lang="sass">
+    .lesson-audio
+        margin-bottom: 30px
+
     .lesson-audio__inner
         //font-family: 'Ruler', sans-serif
         background: #2b2e41
@@ -181,6 +208,33 @@
         border-radius: 50%
         position: relative
         top: -2px
+
+
+    @media (max-width: 1199px)
+        .lesson-audio__wave:nth-child(n+26)
+            display: none
+
+        .lesson-audio__title
+            font-size: 22px
+
+        .lesson-audio__name,
+        .lesson-audio__along,
+        .lesson-audio__comments
+            font-size: 14px
+
+
+    @media (max-width: 991px)
+        .lesson-audio__wave:nth-child(n+26)
+            display: inline-block
+
+
+
+    /*@media (max-width: 767px)*/
+
+
+
+
+    /*@media (max-width: 575px)*/
 
 
 
