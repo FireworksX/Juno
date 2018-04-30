@@ -1,8 +1,10 @@
 <template lang="pug">
     .lesson-audio.col-xs-4.col-lg-4.col-md-6.col-sm-12
         .lesson-audio__inner
+            .lesson-audio__more
             .lesson-audio__track
                 .lesson-audio__play(@click="toggleAudio")
+                    i.ion-ios-locked(v-if="obj.lock")
                     i.ion-ios-play(v-if="track.toggle === 'play'")
                     i.ion-ios-pause(v-if="track.toggle === 'pause'")
                     svg.lesson-audio__progress
@@ -64,7 +66,7 @@
         data () {
             return {
                 track: {
-                    toggle: 'play',
+                    toggle: 'lock',
                     duration: '',
                     offset: 189,
                     object: {}
@@ -104,7 +106,8 @@
             }
         },
         created(){
-            this.initAudio()
+            this.initAudio();
+            this.track.toggle = (this.obj.lock === true) ? 'lock' : 'play'
         }
     }
 </script>

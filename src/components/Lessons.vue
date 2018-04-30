@@ -3,35 +3,6 @@
         .container
             .row
                 lesson-audio(:obj="audioTrack")
-            //.lessons-statistics
-            //    h4.lessons-statistics__title Статистика
-            //    .lessons-statistics__container
-            //        ul.lessons-statistics__list
-            //            .row
-            //                li.lessons-statistics__item.col-lg-4
-            //                    .lessons-statistics__icon
-            //                        i.ion-ios-people.lessons-statistics__icon_one
-            //                    .lessons-body
-            //                        .lessons-body__head Новых пользователей
-            //                        .lessons-body__count
-            //                            span.lessons-body__count_bold 34
-            //                            |На этой неделе
-            //                li.lessons-statistics__item.col-lg-4
-            //                    .lessons-statistics__icon
-            //                        i.ion-clipboard.lessons-statistics__icon_two
-            //                    .lessons-body
-            //                        .lessons-body__head Человек решило этот тест
-            //                        .lessons-body__count
-            //                            span.lessons-body__count_bold 841
-            //                            |В этом месяце
-            //                li.lessons-statistics__item.col-lg-4
-            //                    .lessons-statistics__icon
-            //                        i.ion-android-favorite.lessons-statistics__icon_three
-            //                    .lessons-body
-            //                        .lessons-body__head Обсуждений
-            //                        .lessons-body__count
-            //                            span.lessons-body__count_bold 438
-                                        |На этой неделе
             .lessons-wrapper
                 h4.lessons-wrapper__head {{ lessons.length }} Lessons found
                 ul.lessons-wrapper__list
@@ -102,6 +73,7 @@
         data () {
             return {
                 audioTrack:{
+                    lock: true,
                     author: {
                         name: 'Thomas',
                         url: '/user/0'
