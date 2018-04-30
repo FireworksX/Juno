@@ -34,6 +34,10 @@ var _vueResource = require('vue-resource');
 
 var _vueResource2 = _interopRequireDefault(_vueResource);
 
+var _vueAgile = require('vue-agile');
+
+var _vueAgile2 = _interopRequireDefault(_vueAgile);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //particlesJS.load('form__overlay', 'particlesjs-config.json');
@@ -41,6 +45,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 _vue2.default.use(_vueResource2.default);
 _vue2.default.use(_vueRouter2.default);
+_vue2.default.use(_vueAgile2.default);
 
 var routes = [{ path: '/sign', component: _Form2.default }, { path: '/dashboard', component: _Dashboard2.default }, { path: '/lessons/:id', component: _Lessons2.default }, { path: '/', component: _App2.default, props: true }];
 

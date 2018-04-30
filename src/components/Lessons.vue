@@ -3,6 +3,7 @@
         .container
             .row
                 lesson-audio(:obj="audioTrack")
+                lesson-post
             .lessons-wrapper
                 h4.lessons-wrapper__head {{ lessons.length }} Lessons found
                 ul.lessons-wrapper__list
@@ -64,9 +65,11 @@
     import Vue from 'vue'
     import Person_small from '../components/Person_small.vue';
     import Lesson_audio from '../components/Lesson_audio.vue'
+    import Lesson_post from '../components/Lesson_post.vue'
 
     Vue.component('person-small', Person_small);
     Vue.component('lesson-audio', Lesson_audio);
+    Vue.component('lesson-post', Lesson_post);
 
 
     export default {

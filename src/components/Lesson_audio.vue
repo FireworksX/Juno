@@ -53,7 +53,7 @@
                     span.lesson-audio__dot
                     span.lesson-audio__comments
                         i.ion-ios-eye
-                        |{{ obj.views }} view
+                        |{{ obj.views }}
 </template>
 
 <script>
@@ -76,11 +76,6 @@
         methods: {
             initAudio() {
                 this.track.object = new Audio(this.obj.song.url);
-//                let progress = setInterval(()=>{
-//                    this.track.offset = 189 - (this.track.object.currentTime / this.track.object.duration * 100);
-//                    if(this.track.offset === 0)
-//                        clearInterval(progress);
-//                }, 1000);
                 this.track.object.addEventListener('timeupdate', () => {
                     this.track.offset = 189 - (this.track.object.currentTime / this.track.object.duration * 100);
                 });
@@ -107,7 +102,7 @@
         },
         created(){
             this.initAudio();
-            this.track.toggle = (this.obj.lock === true) ? 'lock' : 'play'
+            this.track.toggle = (this.obj.lock === true) ? 'lock' : 'play';
         }
     }
 </script>
@@ -187,23 +182,24 @@
         text-align: right
 
     .lesson-audio__title
-        font-size: 25px
+        font-size: 20px
         font-weight: 600
         color: #d0ddef
 
     .lesson-audio__name,
     .lesson-audio__along,
     .lesson-audio__comments
-        font-size: 15px
-        font-weight: 600
+        font-size: 14px
+        font-weight: 500
         color: #71728e
         i
             margin-right: 7px
+            margin-left: 3px
 
     .lesson-audio__dot
         display: inline-block
-        width: 5px
-        height: 5px
+        width: 3px
+        height: 3px
         background: #71728e
         margin: 0 7px
         -webkit-border-radius: 50%

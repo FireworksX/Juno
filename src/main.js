@@ -7,12 +7,14 @@ import Dashboard from './components/Dashboard.vue'
 import App from './components/App.vue'
 import Lessons from './components/Lessons.vue'
 import VueResource from 'vue-resource'
+import VueAgile from 'vue-agile'
 
 //particlesJS.load('form__overlay', 'particlesjs-config.json');
 
 
 Vue.use(VueResource);
 Vue.use(VueRouter);
+Vue.use(VueAgile);
 
 const routes = [
     { path: '/sign', component: Form },
@@ -40,7 +42,7 @@ let vm = new Vue({
                     this.$router.replace(`/`);
                     this.particlesBlur = false;
                 }else{
-                    this.$router.replace('sign')
+                    this.$router.replace('sign');
                 }
             }, (err) => {
                 console.log(err);
