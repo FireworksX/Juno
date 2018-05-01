@@ -4,6 +4,7 @@
             .row
                 lesson-audio(:obj="audioTrack")
                 lesson-post
+                person-level(startExp="80" endExp="250" level="1")
             .lessons-wrapper
                 h4.lessons-wrapper__head {{ lessons.length }} Lessons found
                 ul.lessons-wrapper__list
@@ -66,10 +67,12 @@
     import Person_small from '../components/Person_small.vue';
     import Lesson_audio from '../components/Lesson_audio.vue'
     import Lesson_post from '../components/Lesson_post.vue'
+    import Person_level from '../components/Person_level.vue'
 
     Vue.component('person-small', Person_small);
     Vue.component('lesson-audio', Lesson_audio);
     Vue.component('lesson-post', Lesson_post);
+    Vue.component('person-level', Person_level);
 
 
     export default {

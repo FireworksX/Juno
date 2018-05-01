@@ -68,7 +68,7 @@
                     rewards: {
                         money: 10,
                         achievementPackName: 'starter',
-                        achievementName: 'one',
+                        achievementName: 'six',
                         exp: 25
                     }
                 },
