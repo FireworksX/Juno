@@ -2,32 +2,48 @@
     .lesson-post.col-xs-4.col-lg-4.col-md-6.col-sm-12
         .lesson-post__inner
             agile(v-bind:arrows="false" v-bind:dots="false" v-bind:autoplay="true" v-bind:autoplaySpeed="5000")
-                //.slide.slide__one
-                    p.lesson-post__desc After flattening the caviars, varnish rice. Break oysters freshly, then mix with iced tea and serve equally in plastic bag.
+                .slide.slide__one
+                    p.lesson-post__desc {{ options.description }}
                     .lesson-post__details
-                        .lesson-post__isvideo
+                        .lesson-post__isvideo(v-if="options.isVideo")
                             span Have video
                         .lesson-post__difficult
                             span High
                 .slide.slide__two
                     h4.lesson-post__head Награды
-                    .lesson-post__rewerds
+                    .lesson-post__rewards
                         .lesson-post__money
-                            i.ion-social-usd
-                            //img(src="access/stack_money.png")
-                            span +17
+                            img(src="access/stack_money.png")
+                            span +{{ options.rewards.money }}
                         .lesson-post__achievement
+                            img(:src="'access/achievement/'+ options.rewards.achievementPackName +'-pack/'+ options.rewards.achievementName +'.png'")
                         .lesson-post__exp
+                            img(src="access/exp_star.png")
+                            span +{{ options.rewards.exp }}
+                //.slide.slide__three
+                    h4.lesson-post__impressions Впечатления
+                    .lesson-post__imp
+                        .lesson-post__complexity
+                            .lesson-post__text Оцените сложность
+                            .lesson-post__select
+                                span.lesson-post__dif.lesson-post__low Легко
+                                span.lesson-post__dif.lesson-post__middle Средне
+                                span.lesson-post__dif.lesson-post__high Сложно
+                        //.lesson-post__btns
+                            .lesson-post__attachment
+                                i.ion-android-attach
+                            .lesson-post__send Отправить
+                                i.ion-ios-paperplane-outline
             .lesson-post__meta
-                .lesson-post__title Введение в HTML
+                .lesson-post__title {{ options.title }}
                 .lesson-post__datas
-                    span.lesson-post__name Thomas
+                    span.lesson-post__name {{ options.meta.authorName }}
                     span.lesson-post__dot
-                    span.lesson-post__along 2h ago
+                    span.lesson-post__along {{ options.meta.timeAgo }}h ago
                     span.lesson-post__dot
                     span.lesson-post__comments
                         i.ion-ios-eye
-                        |27232
+                        |{{ options.meta.views }}
 </template>
 
 <script>
@@ -35,9 +51,32 @@
 
     export default {
         components: {Agile},
+        //props: ['options'],
         data () {
-            return {}
-        }
+            return {
+                options: {
+                    isVideo: true,
+                    difficult: 0,
+                    description: 'After flattening the caviars, varnish rice. Break oysters freshly, then mix with iced tea and serve equally in plastic bag.',
+                    title: 'Введение в HTML',
+                    meta: {
+                        authorName: 'Thomas',
+                        authorUrl: '/user/0',
+                        timeAgo: 1,
+                        views: 27198,
+                    },
+                    rewards: {
+                        money: 10,
+                        achievementPackName: 'starter',
+                        achievementName: 'one',
+                        exp: 25
+                    }
+                },
+                impressions: {
+                    complexity: 0
+                }
+            }
+        },
     }
 </script>
 
@@ -54,7 +93,7 @@
 
     .lesson-post__desc
         font-size: 14px
-        font-weight: 300
+        font-weight: 500
         color: #ffffff
         text-align: center
         margin-top: 5px
@@ -151,28 +190,113 @@
         text-align: center
         font-size: 20px
         color: #abacca
-        position: relative
-        top: -20px
+        margin-bottom: 15px
         font-weight: 700
+
+    .lesson-post__rewards
+        display: flex
+        justify-content: space-around
 
     .lesson-post__money
         font-weight: 700
         color: #ffffff
         position: relative
-        &:before
-            content: ''
-            width: 50px
-            height: 50px
-            background: rgba(0, 231, 110, 0.51)
-            -webkit-border-radius: 50%
-            -moz-border-radius: 50%
-            border-radius: 50%
-            left: 0
-            right: 0
-            top: 0
-            bottom: 0
-            position: absolute
+        display: flex
+        flex-direction: column
         img
-            width: 30px
+            width: 40px
+            margin-top: 15px
+        span
+            margin-top: 10px
+            position: relative
+            left: 5px
+
+    .lesson-post__exp
+        font-weight: 700
+        color: #ffffff
+        position: relative
+        display: flex
+        flex-direction: column
+        img
+            width: 40px
+            margin-top: 15px
+        span
+            margin-top: 5px
+            position: relative
+            left: 3px
+
+    /* impressions */
+
+    .lesson-post__impressions
+        text-align: center
+        font-weight: 500
+        font-size: 18px
+        color: #D0DDE4
+        margin: 15px 0
+
+    .lesson-post__complexity
+        padding: 0 20px
+
+    .lesson-post__text
+        font-weight: 500
+        font-size: 16px
+        color: #ffffff
+        text-align: center
+
+    .lesson-bar
+        margin-top: 20px
+        position: relative
+        padding-bottom: 5px
+        width: 100%
+        height: 10px
+
+    .lesson-post__select
+        display: flex
+        justify-content: space-around
+        margin-top: 10px
+
+    .lesson-post__dif
+        padding: 5px 10px
+        color: #ffffff
+        background: #434451
+        -webkit-border-radius: 5px
+        -moz-border-radius: 5px
+        border-radius: 5px
+        cursor: pointer
+    
+    .dif-active
+        border: 2px solid #C6DDEF
+
+    .lesson-post__btns
+        display: flex
+        justify-content: center
+        margin-top: 15px
+        align-items: flex-end
+
+    .lesson-post__send
+        display: flex
+        justify-content: center
+        align-items: center
+        background: #434451
+        color: #C6DDEF
+        font-size: 14px
+        font-weight: 500
+        -webkit-border-radius: 5px
+        -moz-border-radius: 5px
+        border-radius: 5px
+        padding: 7px 15px
+
+    .lesson-post__attachment
+        display: flex
+        justify-content: center
+        align-items: center
+        background: #434451
+        color: #C6DDEF
+        font-size: 20px
+        font-weight: 500
+        -webkit-border-radius: 5px
+        -moz-border-radius: 5px
+        border-radius: 5px
+
 
 </style>

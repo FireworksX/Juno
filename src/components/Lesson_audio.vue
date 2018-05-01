@@ -93,7 +93,7 @@
             toggleAudio() {
                 if(this.track.toggle === 'play'){
                     this.track.object.play();
-                    this.track.toggle = 'pause'
+                    this.track.toggle = 'pause';
                 }else if(this.track.toggle === 'pause'){
                     this.track.object.pause();
                     this.track.toggle = 'play';
