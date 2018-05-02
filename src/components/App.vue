@@ -3,10 +3,7 @@
         preloader(:unLoaded="isPreloader")
         //vignette
         person-small(:user="profile")
-        ul.application-container
-            svg.paper
-            //li.application-container__item(v-for="(node, index) in nodes" v-bind:style="node.styles" v-on:click="selectLesson(index)" v-bind:class="{node_unlock: node.progress.enabled}")
-                |{{ node.name | capitalize }}
+        svg.paper
 </template>
 
 <script>
@@ -14,7 +11,7 @@
     import VueResourse from 'vue-resource'
     import Person_small from '../components/Person_small.vue'
     import Vignette from '../components/vignette.vue'
-    import DrawPaths from '../model/DrawNodes'
+    import DrawNodes from '../model/DrawNodes'
     import Person_level from '../components/Person_level.vue'
     import Preloader from '../components/Preloader.vue'
 
@@ -26,17 +23,14 @@
     Vue.component('person-level', Person_level);
     Vue.component('preloader', Preloader);
 
-//    window.addEventListener('load', () => {
-//        this.isPreloader = false;
-//    });
-
     export default {
         data () {
             return {
                 isPreloader: true,
                 profile: {},
                 nodes: [],
-                enabled: true
+                enabled: true,
+                paperOfNodes: {}
             }
         },
         filters: {
@@ -87,13 +81,20 @@
                     }
                     i++;
                 }
-                new DrawPaths('.paper', this.nodes, this.$router).render();
+
+                /*
+                    render() - рисуем ноды и пути к ним
+                    light(enable) - включает [true] и выключает свет [false]
+                */
+                this.paperOfNodes = new DrawNodes('.paper', this.nodes, this.$router).render().light(true);
+
                 /*
                     Принимает 3 аргумента: 1- DOM svg элемент где будет происходить отрисовка
                     2- Массив с нодами которые нужно отрисовать
                     3- Router от экземпляра Vue для переходи между страницами SPA
                  */
                 this.isPreloader = false;
+
             }
         },
         mounted() {
@@ -118,46 +119,9 @@
     .paper
         width: 100%
         height: 100%
-        position: absolute
+        position: relative
         left: 0
         top: 0
-        circle
-            cursor: pointer
-        text
-            fill: #fff
-            font-size: 16px
-            font-weight: 700
-
-    .application-container
-        width: 100%
-        height: 100%
-        position: relative
-        transform-origin: center center 0
-        transition: all 0.2s ease 0s
-        -webkit-transform-origin: center center 0
-        -webkit-transition: all 0.2s ease 0s
-
-    .application-container__item
-        width: 80px
-        height: 80px
-        background: #34495e
-        -webkit-border-radius: 50%
-        -moz-border-radius: 50%
-        border-radius: 50%
-        position: absolute
-        left: 100px
-        top: 190px
-        display: flex
-        justify-content: center
-        align-items: center
-        color: #fff
-
-    .node_unlock
-        transition: .3s
-        cursor: pointer
-        &:hover
-            transform: scale(1.2)
-            background: #465c71
 
 
 </style>

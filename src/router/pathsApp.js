@@ -57,7 +57,7 @@ router.post('/profileAuto', (req, res) => {
                     name: 'js',
                     enabled: true,
                     id: 2
-                }
+                },
             ]
         }
     };

@@ -8,6 +8,7 @@ class DrawPaths {
         this.paper = Snap(paper);
         this.nodes = nodes;
         this.$router = _$router; //Router от экземпляра VUE
+        this.lightObject = null;
     }
 
     render(){
@@ -17,6 +18,22 @@ class DrawPaths {
             this._drawNode(index);
             this._drawPaths();
             index++;
+        }
+        return this;
+    }
+
+    light(enabled){
+        if(enabled){
+            let light = this.paper.gradient(`r(0.5, 0.2, .6)rgba(255, 255, 255, .5)-transparent`);
+            let cir = this.paper.circle(screen.width / 2, 0, screen.height).attr({
+                fill: light
+            });
+            this.paper.prepend(cir);
+            this.lightObject = cir;
+            return this;
+        }else if(!enabled && this.lightObject !== null){
+            this.lightObject.remove();
+            return this;
         }
     }
 
@@ -58,7 +75,8 @@ class DrawPaths {
             .attr({
                 fontSize: 16,
                 fontWeight: 300,
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
+                fill: '#fff'
             });
 
         let group = this.paper.g(rect, rectProgress, text);
