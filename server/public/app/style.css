@@ -19,9 +19,6 @@ body {
   filter: blur(5px);
 }
 
-.application{
-  background: url('images/background.png');
-}
 
 .vignette{
   width: 100%;

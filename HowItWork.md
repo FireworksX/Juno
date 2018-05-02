@@ -23,7 +23,7 @@
 		+ [`User.js`](#abcd) - Работает с данными пользователя
 		+ [`Nodes.js`](#abcd) - Работает с темами уроков
 		+ [`Lessons.js`](#abcd) - Работает с уроками
-		+ [`DrawPaths.js`](#abcd) - Рисует линий для нод
+		+ [`DrawNodes.js`](#abcd) - Рисует линий для нод
 	+ `router`
 		+  [`pathsApp.js`](#pathsapp.js) - Обработка HTTP запросов
 	+ [`views`](#views) - страницы сайта

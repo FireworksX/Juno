@@ -1,10 +1,10 @@
 <template lang="pug">
     .application
-        vignette
+        //vignette
         person-small(:user="profile")
         ul.application-container
             svg.paper
-            li.application-container__item(v-for="(node, index) in nodes" v-bind:style="node.styles" v-on:click="selectLesson(index)" v-bind:class="{node_unlock: node.progress.enabled}")
+            //li.application-container__item(v-for="(node, index) in nodes" v-bind:style="node.styles" v-on:click="selectLesson(index)" v-bind:class="{node_unlock: node.progress.enabled}")
                 |{{ node.name | capitalize }}
 </template>
 
@@ -13,7 +13,7 @@
     import VueResourse from 'vue-resource'
     import Person_small from '../components/Person_small.vue'
     import Vignette from '../components/vignette.vue'
-    import DrawPaths from '../model/DrawPaths'
+    import DrawPaths from '../model/DrawNodes'
     import Person_level from '../components/Person_level.vue'
 
 
@@ -44,7 +44,7 @@
             getSession () {
                 this.$http.post("http://localhost:2000/profileAuto").then( (res) => {
                     this.profile = res.data;
-                    console.log(res)
+                    console.log(res);
                     this.getNodes();
                 }, (err) => {
                     console.log(err);
@@ -53,9 +53,7 @@
             getNodes () {
                 this.$http.post("http://localhost:2000/getNodes").then( (res) => {
                     this.nodes = res.data.object;
-                    console.log(res.data);
                     this.pushPersonalData();
-                    new DrawPaths('.paper', this.nodes).render();
                 }, (err) => {
                     console.log(err);
                 });
@@ -83,6 +81,12 @@
                     }
                     i++;
                 }
+                new DrawPaths('.paper', this.nodes, this.$router).render();
+                /*
+                    Принимает 3 аргумента: 1- DOM svg элемент где будет происходить отрисовка
+                    2- Массив с нодами которые нужно отрисовать
+                    3- Router от экземпляра Vue для переходи между страницами SPA
+                 */
             }
         },
         mounted() {
@@ -94,8 +98,12 @@
 
 <style lang="sass">
 
+    text
+        text-transform: uppercase
+
     .application
         font-family: 'Montserrat', sans-serif
+        background: #1E202D
 
     .paper
         width: 100%

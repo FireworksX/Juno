@@ -51,7 +51,7 @@ let vm = new Vue({
     },
     mounted() {
         //this.getSession();
-         this.$router.replace(`/lessons/0`);
+         this.$router.replace(`/`);
         // this.particlesBlur = false;
     }
 });
