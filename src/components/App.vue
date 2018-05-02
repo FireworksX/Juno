@@ -1,5 +1,6 @@
 <template lang="pug">
     .application
+        preloader(:unLoaded="isPreloader")
         //vignette
         person-small(:user="profile")
         ul.application-container
@@ -15,6 +16,7 @@
     import Vignette from '../components/vignette.vue'
     import DrawPaths from '../model/DrawNodes'
     import Person_level from '../components/Person_level.vue'
+    import Preloader from '../components/Preloader.vue'
 
 
     Vue.use(VueResourse);
@@ -22,12 +24,14 @@
     Vue.component('person-small', Person_small);
     Vue.component('vignette', Vignette);
     Vue.component('person-level', Person_level);
+    Vue.component('preloader', Preloader);
 
 
 
     export default {
         data () {
             return {
+                isPreloader: true,
                 profile: {},
                 nodes: [],
                 enabled: true
@@ -87,6 +91,9 @@
                     2- Массив с нодами которые нужно отрисовать
                     3- Router от экземпляра Vue для переходи между страницами SPA
                  */
+                window.addEventListener('load', () => {
+                    this.isPreloader = false;
+                });
             }
         },
         mounted() {
@@ -100,6 +107,9 @@
 
     text
         text-transform: uppercase
+
+    body
+        overflow: hidden
 
     .application
         font-family: 'Montserrat', sans-serif

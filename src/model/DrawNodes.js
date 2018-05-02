@@ -7,7 +7,7 @@ class DrawPaths {
     constructor (paper, nodes, _$router){
         this.paper = Snap(paper);
         this.nodes = nodes;
-        this.$router = _$router
+        this.$router = _$router; //Router от экземпляра VUE
     }
 
     render(){
