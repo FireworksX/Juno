@@ -26,7 +26,9 @@
     Vue.component('person-level', Person_level);
     Vue.component('preloader', Preloader);
 
-
+//    window.addEventListener('load', () => {
+//        this.isPreloader = false;
+//    });
 
     export default {
         data () {
@@ -91,9 +93,7 @@
                     2- Массив с нодами которые нужно отрисовать
                     3- Router от экземпляра Vue для переходи между страницами SPA
                  */
-                window.addEventListener('load', () => {
-                    this.isPreloader = false;
-                });
+                this.isPreloader = false;
             }
         },
         mounted() {
