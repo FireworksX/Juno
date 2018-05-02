@@ -1,5 +1,5 @@
 <template lang="pug">
-    .lesson-audio.col-xs-4.col-lg-4.col-md-6.col-sm-12
+    .lesson-audio
         .lesson-audio__inner
             .lesson-audio__more
             .lesson-audio__track
@@ -118,6 +118,10 @@
         -webkit-border-radius: 10px
         -moz-border-radius: 10px
         border-radius: 10px
+        overflow: hidden
+        -webkit-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
+        -moz-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
+        box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
 
     .lesson-audio__track
         display: flex

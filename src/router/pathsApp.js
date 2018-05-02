@@ -43,7 +43,7 @@ router.post('/profileAuto', (req, res) => {
                     id: 0,
                     lessons: [
                         {
-                            enabled: true,
+                            enabled: false,
                             countStep: 100,
                             currentStep: 35,
                             status: {

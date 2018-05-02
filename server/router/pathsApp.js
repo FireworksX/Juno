@@ -59,7 +59,7 @@ router.post('/profileAuto', function (req, res) {
                 enabled: true,
                 id: 0,
                 lessons: [{
-                    enabled: true,
+                    enabled: false,
                     countStep: 100,
                     currentStep: 35,
                     status: {

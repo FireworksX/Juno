@@ -1,16 +1,14 @@
 <template lang="pug">
     .lessons
         .container
-            .row
-                lesson-audio(:obj="audioTrack")
-                lesson-post
-                person-level(startExp="80" endExp="250" level="1")
             .lessons-wrapper
                 h4.lessons-wrapper__head {{ lessons.length }} Lessons found
                 ul.lessons-wrapper__list
                     .row
-                        li.lessons-item.col-lg-3(v-for="(lesson, index) in lessons")
-                            .lessons-item__wrapper
+                        li.col-xs-4.col-lg-4.col-md-6.col-sm-12(v-for="(lesson, index) in lessons")
+                            lesson-post(:options="lesson" v-bind:id="index" v-if="lesson.type === 'post'")
+                            lesson-audio(:obj="lesson" v-if="lesson.type === 'audio'")
+                            //.lessons-item__wrapper
                                 .lessons-item__lock(v-if="!lesson.progress.enabled")
                                     div.lessons-item__icon
                                         i.ion-locked
@@ -78,19 +76,6 @@
     export default {
         data () {
             return {
-                audioTrack:{
-                    lock: true,
-                    author: {
-                        name: 'Thomas',
-                        url: '/user/0'
-                    },
-                    timeAgo: 7,
-                    views: 23198,
-                    song: {
-                        url: 'http://dnl10.drivemusic.me/dl/online/6E7ySIYGe3BK7mjxEJiqMQ/1525066363/download_music/2013/08/m83-oblivion-ost-oblivion.mp3',
-                        title: 'Oblivion'
-                    }
-                },
                 routeID: {
                     id: this.$route.params.id,
                 },
@@ -110,6 +95,7 @@
             getLessons () {
                 this.$http.post("http://localhost:2000/getLessons", this.routeID, {emulateJSON: true}).then((res) => {
                     this.lessons = res.data.paths;
+                    console.log(res.data);
                     this.pushPersonalData();
                 }, (err) => {
                     console.log(err)
@@ -123,7 +109,7 @@
                     }
                     i++;
                 }
-                console.log(this.lessons)
+                console.log(this.lessons);
             },
             setProgress(lesson) {
                 let width = lesson.progress.currentStep / lesson.progress.countStep * 100;
@@ -165,7 +151,7 @@
     .lessons
         width: 100%
         height: 100%
-        background: #000
+        background: #1e202d
         font-family: 'Montserrat', sans-serif
 
     .lessons-statistics

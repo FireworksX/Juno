@@ -1,9 +1,9 @@
 <template lang="pug">
-    .lesson-post.col-xs-4.col-lg-4.col-md-6.col-sm-12
+    .lesson-post(v-if="isEnable")
         .lesson-post__inner
             agile(v-bind:arrows="false" v-bind:dots="false" v-bind:autoplay="true" v-bind:autoplaySpeed="5000")
                 .slide.slide__one
-                    p.lesson-post__desc {{ options.description }}
+                    p.lesson-post__desc {{ options.desc }}
                     .lesson-post__details
                         .lesson-post__isvideo(v-if="options.isVideo")
                             span Have video
@@ -44,6 +44,8 @@
                     span.lesson-post__comments
                         i.ion-ios-eye
                         |{{ options.meta.views }}
+                .lesson-post__start
+                    i.ion-ios-arrow-forward
 </template>
 
 <script>
@@ -51,32 +53,33 @@
 
     export default {
         components: {Agile},
-        //props: ['options'],
+        props: ['options', 'id'],
         data () {
             return {
-                options: {
-                    isVideo: true,
-                    difficult: 0,
-                    description: 'After flattening the caviars, varnish rice. Break oysters freshly, then mix with iced tea and serve equally in plastic bag.',
-                    title: 'Введение в HTML',
-                    meta: {
-                        authorName: 'Thomas',
-                        authorUrl: '/user/0',
-                        timeAgo: 1,
-                        views: 27198,
-                    },
-                    rewards: {
-                        money: 10,
-                        achievementPackName: 'starter',
-                        achievementName: 'six',
-                        exp: 25
-                    }
-                },
-                impressions: {
-                    complexity: 0
-                }
+                isEnable: true
+//                options: {
+//                    isVideo: true,
+//                    difficult: 0,
+//                    description: 'After flattening the caviars, varnish rice. Break oysters freshly, then mix with iced tea and serve equally in plastic bag.',
+//                    title: 'Введение в HTML',
+//                    meta: {
+//                        authorName: 'Thomas',
+//                        authorUrl: '/user/0',
+//                        timeAgo: 1,
+//                        views: 27198,
+//                    },
+//                    rewards: {
+//                        money: 10,
+//                        achievementPackName: 'starter',
+//                        achievementName: 'one',
+//                        exp: 25
+//                    }
+//                },
             }
         },
+        created(){
+            if(this.id === undefined) this.isEnable = false; //В цикле Lessons.vue выполняется лишняя итерация, в props['options'] приходит undefined и мы получаем ошибку
+        }
     }
 </script>
 
@@ -86,6 +89,9 @@
 
     .lesson-post__inner
         background: #2b2e41
+        -webkit-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
+        -moz-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
+        box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
         -webkit-border-radius: 10px
         -moz-border-radius: 10px
         border-radius: 10px

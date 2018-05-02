@@ -14,12 +14,14 @@
     import Person_small from '../components/Person_small.vue'
     import Vignette from '../components/vignette.vue'
     import DrawPaths from '../model/DrawPaths'
+    import Person_level from '../components/Person_level.vue'
 
 
     Vue.use(VueResourse);
 
     Vue.component('person-small', Person_small);
     Vue.component('vignette', Vignette);
+    Vue.component('person-level', Person_level);
 
 
 
