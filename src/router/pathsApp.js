@@ -1,8 +1,8 @@
-import express from 'express'
-import bodyParser from 'body-parser'
-import User from '../model/User'
-import Nodes from '../model/Nodes'
-import Lessons from '../model/Lessons'
+import express from 'express';
+import bodyParser from 'body-parser';
+import User from '../model/User';
+import Nodes from '../model/Nodes';
+import Lessons from '../model/Lessons';
 
 let router = express.Router();
 

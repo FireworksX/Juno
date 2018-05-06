@@ -132,7 +132,7 @@
             },
             changeType(type) {
                 this.type = type;
-                this.alert.enabled = false;
+                //this.alert.enabled = false;
                 this.inputs.step = 0;
                 this.formInit();
                 this.personalData.name = '';

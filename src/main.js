@@ -1,13 +1,14 @@
-import './main.sass'
-import 'particles.js'
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Form from './components/Form.vue'
-import Dashboard from './components/Dashboard.vue'
-import App from './components/App.vue'
-import Lessons from './components/Lessons.vue'
-import VueResource from 'vue-resource'
-import VueAgile from 'vue-agile'
+import './main.sass';
+import 'particles.js';
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Form from './components/Form.vue';
+import Dashboard from './components/Dashboard.vue';
+import App from './components/App.vue';
+import Lessons from './components/Lessons.vue';
+import VueResource from 'vue-resource';
+import VueAgile from 'vue-agile';
+import VueBar from 'vuebar';
 
 //particlesJS.load('form__overlay', 'particlesjs-config.json');
 
@@ -15,6 +16,7 @@ import VueAgile from 'vue-agile'
 Vue.use(VueResource);
 Vue.use(VueRouter);
 Vue.use(VueAgile);
+Vue.use(VueBar);
 
 const routes = [
     { path: '/sign', component: Form },
@@ -51,7 +53,7 @@ let vm = new Vue({
     },
     mounted() {
         //this.getSession();
-         this.$router.replace(`/`);
+         this.$router.replace(`/lessons/0`);
         // this.particlesBlur = false;
     }
 });

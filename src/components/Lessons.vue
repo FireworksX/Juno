@@ -1,13 +1,14 @@
 <template lang="pug">
-    .lessons
-        .container
-            .lessons-wrapper
-                h4.lessons-wrapper__head {{ lessons.length }} Lessons found
-                ul.lessons-wrapper__list
-                    .row
-                        li.col-xs-4.col-lg-4.col-md-6.col-sm-12(v-for="(lesson, index) in lessons")
-                            lesson-post(:options="lesson" v-bind:id="index" v-if="lesson.type === 'post'")
-                            lesson-audio(:obj="lesson" v-if="lesson.type === 'audio'")
+    .lessons(v-bar="{preventParentScroll: true, scrollThrottle: 30}")
+        div
+            .container
+                .lessons-wrapper
+                    h4.lessons-wrapper__head {{ lessons.length }} Lessons found
+                    ul.lessons-wrapper__list
+                        .row
+                            li.lesson-wrapper__item.col-xs-4.col-lg-4.col-md-6.col-sm-12(v-for="(lesson, index) in lessons")
+                                lesson-post(:options="lesson" v-bind:id="index" v-if="lesson.type === 'post'" v-on:more="openMore($event)")
+                                lesson-audio(:obj="lesson" v-if="lesson.type === 'audio'")
                             //.lessons-item__wrapper
                                 .lessons-item__lock(v-if="!lesson.progress.enabled")
                                     div.lessons-item__icon
@@ -58,7 +59,6 @@
 
     /*
         TODO: Устранить возможность зайти по ссылке даже если данный курс недоступен
-        TODO: Если через dev-tools убрать overlay у заблокированного урока, то его можно использовать
      */
 
     import Vue from 'vue'
@@ -79,11 +79,30 @@
                 routeID: {
                     id: this.$route.params.id,
                 },
+                isOverlay: false,
                 profile: {},
                 lessons: []
             }
         },
         methods: {
+            openMore(object){
+                let items = document.getElementsByClassName('lesson-wrapper__item');
+                let index = 0;
+                if(object.isOpenMore){
+                    for(let key of items){
+                        if(index !== object.id){
+                            key.className += ' item_blured';
+                        }
+                        index++;
+                    }
+                }else{
+                    for(let key of items){
+                        key.classList.remove('item_blured')
+                    }
+                }
+
+
+            },
             getSession () {
                 this.$http.post("http://localhost:2000/profileAuto").then((res) => {
                     this.profile = res.data;
@@ -98,7 +117,7 @@
                     console.log(res.data);
                     this.pushPersonalData();
                 }, (err) => {
-                    console.log(err)
+                    console.log(err);
                 })
             },
             pushPersonalData() {
@@ -148,78 +167,17 @@
 
 <style lang="sass">
 
+    .lesson-wrapper__item
+        transition: .6s
+
+    .item_blured
+        filter: blur(20px)
+
     .lessons
         width: 100%
         height: 100%
-        background: #1e202d
+        background: #efefef
         font-family: 'Montserrat', sans-serif
-
-    .lessons-statistics
-        padding: 20px 0
-        color: #777777
-        font-size: 16px
-
-    .lessons-statistics__container
-        padding: 20px 20px 5px 20px
-        background: #fff
-        -webkit-border-radius: 7px
-        -moz-border-radius: 7px
-        border-radius: 7px
-        margin-top: 10px
-        width: 100%
-        -webkit-box-shadow: 0px 3px 20px 0px rgba(163, 198, 241, 0.3)
-        -moz-box-shadow: 0px 3px 20px 0px rgba(163, 198, 241, 0.3)
-        box-shadow: 0px 3px 20px 0px rgba(163, 198, 241, 0.3)
-
-    .lessons-statistics
-        width: 100%
-
-    .lessons-statistics__item
-        display: flex
-        position: relative
-        &:after
-            content: ''
-            height: 40px
-            width: 2px
-            background: #ececec
-            position: absolute
-            right: 5px
-            top: 15px
-        &:last-child
-            &:after
-                display: none
-
-    .lessons-statistics__icon
-        padding: 40px
-        -webkit-border-radius: 50%
-        -moz-border-radius: 50%
-        border-radius: 50%
-        background: #fff
-        color: #212121
-        margin-right: 20px
-        font-size: 30px
-        position: relative
-        -webkit-box-shadow: 0px 0px 20px 0px rgba(163, 198, 241, 0.3)
-        -moz-box-shadow: 0px 0px 20px 0px rgba(163, 198, 241, 0.3)
-        box-shadow: 0px 0px 20px 0px rgba(163, 198, 241, 0.3)
-
-    .lessons-statistics__icon_one
-        position: absolute
-        top: 25px
-        left: 25px
-        color: #acd1ff
-
-    .lessons-statistics__icon_two
-        position: absolute
-        top: 25px
-        left: 29px
-        color: #eedc5a
-
-    .lessons-statistics__icon_three
-        position: absolute
-        top: 27px
-        left: 27px
-        color: #e14f3f
 
     .lessons-body
         margin-top: 5px
@@ -502,6 +460,43 @@
         width: 100%
         height: 100%
         background: rgba(0, 0, 0, 0.6)
+
+
+    .vb > .vb-dragger
+        z-index: 5
+        width: 12px
+        right: 0
+
+
+    .vb > .vb-dragger > .vb-dragger-styler
+        -webkit-backface-visibility: hidden
+        backface-visibility: hidden
+        -webkit-transform: rotate3d(0,0,0,0)
+        transform: rotate3d(0,0,0,0)
+        -webkit-transition: background-color 100ms ease-out, margin 100ms ease-out, height 100ms ease-out
+        transition: background-color 100ms ease-out, margin 100ms ease-out, height 100ms ease-out
+        background-color: rgba(48, 121, 244,.1)
+        margin: 5px 5px 5px 0
+        border-radius: 20px
+        height: calc(100% - 10px)
+        display: block
+
+
+    .vb.vb-scrolling-phantom > .vb-dragger > .vb-dragger-styler
+        background-color: rgba(48, 121, 244,.3)
+
+    .vb > .vb-dragger:hover > .vb-dragger-styler
+        background-color: rgba(48, 121, 244,.5)
+        margin: 0px
+        height: 100%
+
+    .vb.vb-dragging > .vb-dragger > .vb-dragger-styler
+        background-color: rgba(48, 121, 244,.5)
+        margin: 0px
+        height: 100%
+
+    .vb.vb-dragging-phantom > .vb-dragger > .vb-dragger-styler
+        background-color: rgba(48, 121, 244,.5)
 
 
 </style>

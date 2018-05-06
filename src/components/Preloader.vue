@@ -71,16 +71,13 @@
         left: 0
         top: 0
         transform: rotate(45deg)
-        animation: preloaderLoading 3s infinite ease
+        animation: rotate 2s infinite
 
-    @keyframes preloaderLoading
+    @keyframes rotate
         0%
-            transform: rotate(45deg) scale(1.5)
-            //transform: scale(1)
-        50%
-            transform: rotate(225deg) scale(.8)
+            transform: rotate(45deg)
         100%
-            transform: rotate(45deg) scale(1.5)
+            transform: rotate(225deg)
 
 
 

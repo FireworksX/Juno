@@ -38,6 +38,10 @@ var _vueAgile = require('vue-agile');
 
 var _vueAgile2 = _interopRequireDefault(_vueAgile);
 
+var _vuebar = require('vuebar');
+
+var _vuebar2 = _interopRequireDefault(_vuebar);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //particlesJS.load('form__overlay', 'particlesjs-config.json');
@@ -46,6 +50,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _vue2.default.use(_vueResource2.default);
 _vue2.default.use(_vueRouter2.default);
 _vue2.default.use(_vueAgile2.default);
+_vue2.default.use(_vuebar2.default);
 
 var routes = [{ path: '/sign', component: _Form2.default }, { path: '/dashboard', component: _Dashboard2.default }, { path: '/lessons/:id', component: _Lessons2.default }, { path: '/', component: _App2.default, props: true }];
 
@@ -79,7 +84,7 @@ var vm = new _vue2.default({
     },
     mounted: function mounted() {
         //this.getSession();
-        this.$router.replace('/');
+        this.$router.replace('/lessons/0');
         // this.particlesBlur = false;
     }
 });

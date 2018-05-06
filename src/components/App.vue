@@ -95,6 +95,7 @@
                  */
                 this.isPreloader = false;
 
+
             }
         },
         mounted() {

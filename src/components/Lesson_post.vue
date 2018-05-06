@@ -1,51 +1,30 @@
 <template lang="pug">
     .lesson-post(v-if="isEnable")
-        .lesson-post__inner
-            agile(v-bind:arrows="false" v-bind:dots="false" v-bind:autoplay="true" v-bind:autoplaySpeed="5000")
-                .slide.slide__one
-                    p.lesson-post__desc {{ options.desc }}
-                    .lesson-post__details
-                        .lesson-post__isvideo(v-if="options.isVideo")
-                            span Have video
-                        .lesson-post__difficult
-                            span High
-                .slide.slide__two
-                    h4.lesson-post__head Награды
-                    .lesson-post__rewards
-                        .lesson-post__money
-                            img(src="access/stack_money.png")
-                            span +{{ options.rewards.money }}
-                        .lesson-post__achievement
-                            img(:src="'access/achievement/'+ options.rewards.achievementPackName +'-pack/'+ options.rewards.achievementName +'.png'")
-                        .lesson-post__exp
-                            img(src="access/exp_star.png")
-                            span +{{ options.rewards.exp }}
-                //.slide.slide__three
-                    h4.lesson-post__impressions Впечатления
-                    .lesson-post__imp
-                        .lesson-post__complexity
-                            .lesson-post__text Оцените сложность
-                            .lesson-post__select
-                                span.lesson-post__dif.lesson-post__low Легко
-                                span.lesson-post__dif.lesson-post__middle Средне
-                                span.lesson-post__dif.lesson-post__high Сложно
-                        //.lesson-post__btns
-                            .lesson-post__attachment
-                                i.ion-android-attach
-                            .lesson-post__send Отправить
-                                i.ion-ios-paperplane-outline
-            .lesson-post__meta
-                .lesson-post__title {{ options.title }}
-                .lesson-post__datas
-                    span.lesson-post__name {{ options.meta.authorName }}
-                    span.lesson-post__dot
-                    span.lesson-post__along {{ options.meta.timeAgo }}h ago
-                    span.lesson-post__dot
-                    span.lesson-post__comments
-                        i.ion-ios-eye
-                        |{{ options.meta.views }}
-                .lesson-post__start
-                    i.ion-ios-arrow-forward
+        .lesson-post__inner(:class="{ inner_active: isOpenMore }")
+            //agile(v-bind:arrows="false" v-bind:dots="false" v-bind:autoplay="true" v-bind:autoplaySpeed="5000" v-bind:unagile="true")
+            .slide-one
+                img(:src="'assets/lessons/0/' + id + '/post_bg.png'").slide-one__bg
+                .lesson-post__wrapper
+                    .lesson-post__overlay
+                    .lesson-post__like
+                        i.ion-android-favorite-outline
+                    .lesson-post__more(@click="openMore" v-bind:class="{ more_active: isOpenMore }")
+                        i.ion-android-more-vertical
+                    .lesson-post__meta
+                        h4.lesson-post__title {{ options.title }}
+        transition(name="openMore")
+            .slide-two(v-show="isOpenMore")
+                //p.lesson-post__desc {{ options.desc }}
+                h5.lesson-post__head Награды
+                .lesson-post__reward
+                    .lesson-post__money
+                        img(src="assets/stack_money.png")
+                        span +13
+                    .lesson-post__achievement
+                        img(src="assets/achievement/starter-pack/one.png")
+                    .lesson-post__exp
+                        img(src="assets/exp_star.png")
+                        span +30
 </template>
 
 <script>
@@ -56,7 +35,9 @@
         props: ['options', 'id'],
         data () {
             return {
-                isEnable: true
+                isEnable: true,
+                isOpenMore: false,
+                image: './assets/public/app/lessons/0/0/post_bg.png'
 //                options: {
 //                    isVideo: true,
 //                    difficult: 0,
@@ -77,232 +58,175 @@
 //                },
             }
         },
+        methods: {
+            openMore(){
+                this.isOpenMore = !this.isOpenMore;
+                this.$emit('more', {id: this.id, isOpenMore: this.isOpenMore});
+            }
+        },
         created(){
             if(this.id === undefined) this.isEnable = false; //В цикле Lessons.vue выполняется лишняя итерация, в props['options'] приходит undefined и мы получаем ошибку
         }
     }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
+
+    .openMore-enter-active, .openMore-leave-active
+        transition: all .5s
+        max-height: 100%
+
+    .openMore-enter, .openMore-leave-to
+        opacity: 0
+        max-height: 0
+
+
     .lesson-post
         margin-bottom: 30px
+        position: relative
 
     .lesson-post__inner
-        background: #2b2e41
+        background: #fff
         -webkit-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
         -moz-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
         box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
-        -webkit-border-radius: 10px
-        -moz-border-radius: 10px
-        border-radius: 10px
+        -webkit-border-radius: 5px
+        -moz-border-radius: 5px
+        border-radius: 5px
         overflow: hidden
 
-    .lesson-post__desc
-        font-size: 14px
-        font-weight: 500
-        color: #ffffff
-        text-align: center
-        margin-top: 5px
+    .inner_active
+        animation: itemClick .5s ease
 
-    .slide__one
+    @keyframes itemClick
+        0%
+            transform: scale(1)
+        50%
+            transform: scale(.97)
+        100%
+            transform: scale(1)
+
+    .lesson-post__wrapper
+        left: 0
+        top: 0
+        width: 100%
+        height: 180px
+        -webkit-background-size: cover
+        background-size: cover
         position: relative
-        padding: 20px
-
-    .lesson-post__details
         display: flex
-        justify-content: space-between
-        margin-top: 40px
+        align-items: flex-end
+        z-index: 3
 
-    .lesson-post__isvideo
-        padding-left: 20px
-        position: relative
-        &:before
-            -webkit-border-radius: 5px
-            -moz-border-radius: 5px
-            border-radius: 5px
-            content: ''
-            width: 10px
-            height: 10px
-            background: #87fd7b
-            position: absolute
-            left: 0
-            top: 5px
-        span
-            background: #434451
-            font-size: 12px
-            padding: 5px
-            -webkit-border-radius: 5px
-            -moz-border-radius: 5px
-            border-radius: 5px
-            color: #ffffff
+    .lesson-post__overlay
+        background: -moz-linear-gradient(bottom,  rgba(0,0,0,0.69) 0%, rgba(0,0,0,0.5) 49%, rgba(0,0,0,0) 99%)
+        background: -webkit-linear-gradient(bottom,  rgba(0,0,0,0.69) 0%,rgba(0,0,0,0.5) 49%,rgba(0,0,0,0) 99%)
+        background: linear-gradient(to top,  rgba(0,0,0,0.69) 0%,rgba(0,0,0,0.5) 49%,rgba(0,0,0,0) 99%)
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b0000000', endColorstr='#00000000',GradientType=0 )
+        position: absolute
+        height: 100%
+        width: 100%
+        left: 0
+        top: 0
 
-    .lesson-post__difficult
-        padding-right: 20px
-        position: relative
-        &:after
-            -webkit-border-radius: 5px
-            -moz-border-radius: 5px
-            border-radius: 5px
-            content: ''
-            width: 10px
-            height: 10px
-            background: #fd5c4a
-            position: absolute
-            right: 0
-            top: 5px
-        span
-            background: #434451
-            font-size: 12px
-            padding: 5px
-            -webkit-border-radius: 5px
-            -moz-border-radius: 5px
-            border-radius: 5px
-            color: #ffffff
+    .lesson-post__like
+        position: absolute
+        top: 10px
+        right: 10px
+        color: #ffffff
+        font-size: 23px
+        cursor: pointer
 
-    .lesson-post__meta
-        padding: 20px
-
-    .lesson-post__title
-        font-size: 20px
-        font-weight: 600
-        color: #d0ddef
-
-    .lesson-post__name,
-    .lesson-post__along,
-    .lesson-post__comments
-        font-size: 14px
-        font-weight: 500
-        color: #71728e
-        i
-            margin-right: 7px
-            margin-left: 3px
-
-    .lesson-post__dot
-        display: inline-block
-        width: 3px
-        height: 3px
-        background: #71728e
-        margin: 0 7px
+    .lesson-post__more
+        width: 20px
+        height: 20px
         -webkit-border-radius: 50%
         -moz-border-radius: 50%
         border-radius: 50%
-        position: relative
-        top: -2px
+        position: absolute
+        bottom: 20px
+        right: 10px
+        display: flex
+        justify-content: center
+        align-items: center
+        color: #ffffff
+        font-size: 30px
+        cursor: pointer
+        z-index: 1
+        transition: .2s
 
-    .slide__two
-        padding: 20px
+    .more_active
+        transform: rotate(90deg)
+
+    .slide-one
+        position: relative
+
+    .slide-one__bg
+        width: 100%
+        height: 100%
+        position: absolute
+        left: 0
+        top: 0
+
+    .lesson-post__title
+        font-size: 18px
+        font-weight: 600
+        color: #fff
+        margin-top: 20px
+
+    .lesson-post__meta
+        position: relative
+        padding: 10px
+        width: 100%
+
+    .slide-two
+        position: absolute
+        padding: 0 20px
+        width: 100%
+        height: 100%
+        background: #ffffff
+        -webkit-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
+        -moz-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
+        box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
+        border-bottom-left-radius: 5px
+        border-bottom-right-radius: 5px
+        overflow: hidden
+        z-index: 1
 
     .lesson-post__head
+        font-size: 16px
+        color: #000000
+        font-weight: 500
+        margin: 10px 0
         text-align: center
-        font-size: 20px
-        color: #abacca
-        margin-bottom: 15px
-        font-weight: 700
 
-    .lesson-post__rewards
+    .lesson-post__reward
         display: flex
         justify-content: space-around
+        align-items: center
 
     .lesson-post__money
-        font-weight: 700
-        color: #ffffff
-        position: relative
         display: flex
         flex-direction: column
+        align-items: center
         img
             width: 40px
-            margin-top: 15px
         span
+            font-size: 14px
+            font-weight: 700
+            color: #000000
             margin-top: 10px
-            position: relative
-            left: 5px
 
     .lesson-post__exp
-        font-weight: 700
-        color: #ffffff
-        position: relative
         display: flex
         flex-direction: column
+        align-items: center
         img
             width: 40px
-            margin-top: 15px
         span
-            margin-top: 5px
-            position: relative
-            left: 3px
-
-    /* impressions */
-
-    .lesson-post__impressions
-        text-align: center
-        font-weight: 500
-        font-size: 18px
-        color: #D0DDE4
-        margin: 15px 0
-
-    .lesson-post__complexity
-        padding: 0 20px
-
-    .lesson-post__text
-        font-weight: 500
-        font-size: 16px
-        color: #ffffff
-        text-align: center
-
-    .lesson-bar
-        margin-top: 20px
-        position: relative
-        padding-bottom: 5px
-        width: 100%
-        height: 10px
-
-    .lesson-post__select
-        display: flex
-        justify-content: space-around
-        margin-top: 10px
-
-    .lesson-post__dif
-        padding: 5px 10px
-        color: #ffffff
-        background: #434451
-        -webkit-border-radius: 5px
-        -moz-border-radius: 5px
-        border-radius: 5px
-        cursor: pointer
-    
-    .dif-active
-        border: 2px solid #C6DDEF
-
-    .lesson-post__btns
-        display: flex
-        justify-content: center
-        margin-top: 15px
-        align-items: flex-end
-
-    .lesson-post__send
-        display: flex
-        justify-content: center
-        align-items: center
-        background: #434451
-        color: #C6DDEF
-        font-size: 14px
-        font-weight: 500
-        -webkit-border-radius: 5px
-        -moz-border-radius: 5px
-        border-radius: 5px
-        padding: 7px 15px
-
-    .lesson-post__attachment
-        display: flex
-        justify-content: center
-        align-items: center
-        background: #434451
-        color: #C6DDEF
-        font-size: 20px
-        font-weight: 500
-        -webkit-border-radius: 5px
-        -moz-border-radius: 5px
-        border-radius: 5px
-
+            font-size: 14px
+            font-weight: 700
+            color: #000000
+            margin-top: 10px
 
 </style>

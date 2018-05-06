@@ -44,7 +44,7 @@ class DrawPaths {
         let rect = this.paper.rect(cx, cy, cw, ch)
             .attr({
                 transform: `rotate(45 ${cx + cw / 2} ${cy + ch / 2})`,
-                fill,
+                fill: '#1E202D',
                 strokeWidth: 2,
                 stroke: '#E1E7F4'
             });

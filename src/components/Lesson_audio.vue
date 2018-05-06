@@ -113,11 +113,11 @@
 
     .lesson-audio__inner
         //font-family: 'Ruler', sans-serif
-        background: #2b2e41
+        background: #fff
         padding: 20px 3px 20px 20px
-        -webkit-border-radius: 10px
-        -moz-border-radius: 10px
-        border-radius: 10px
+        -webkit-border-radius: 2px
+        -moz-border-radius: 2px
+        border-radius: 2px
         overflow: hidden
         -webkit-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
         -moz-box-shadow: 4px 20px 20px 0px rgba(0, 0, 0, 0.28)
@@ -188,7 +188,7 @@
     .lesson-audio__title
         font-size: 20px
         font-weight: 600
-        color: #d0ddef
+        color: #2e3640
 
     .lesson-audio__name,
     .lesson-audio__along,
