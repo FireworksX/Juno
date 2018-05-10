@@ -2,7 +2,7 @@ var gulp = require('gulp'),
     coffee = require('gulp-coffee'),
     sass = require('gulp-sass'),
     pug = require('gulp-pug'),
-    browserSync = require('browser-sync')
+    browserSync = require('browser-sync');
 
 gulp.task('pug', function () {
     return gulp.src( 'src/pug/**/*.pug' )
@@ -12,10 +12,9 @@ gulp.task('pug', function () {
 });
 
 gulp.task('sass', function(){
-    return gulp.src('src/styles/**/*.+(sass|scss)')
+    return gulp.src('src/public/**/*.+(sass|scss)')
         .pipe(sass())
-        .pipe(gulp.dest('src/styles/css'))
-        .pipe(browserSync.reload({stream: true}))
+        .pipe(gulp.dest('server/public'))
 });
 
 gulp.task('sassServer', function(){
@@ -60,4 +59,8 @@ gulp.task('watch', ['browser-sync' ,'coffee', 'sass', 'pug', 'coffeeServer'], fu
 gulp.task('watchServer', ['coffeeServer', 'sassServer'], function(){
     gulp.watch('server/public/styles/**/*.+(sass|scss)', ['sassServer']);
     gulp.watch('server/**/*.coffee', ['coffeeServer']);
+});
+
+gulp.task('sassWatch', ['sass'], function(){
+    gulp.watch('src/public/**/*.+(sass|scss)', ['sass']);
 });

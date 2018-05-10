@@ -24,7 +24,7 @@
     }
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
     /* Alert */
 
     .form-alert

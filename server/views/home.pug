@@ -6,10 +6,20 @@ html
         link(href="home/animate.css" rel="stylesheet")
         link(href="home/libs/bootstrap/bootstrap-grid.min.css" rel="stylesheet")
         link(href="home/libs/bootstrap/bootstrap.min.css" rel="stylesheet")
-        link(href="https://fonts.googleapis.com/css?family=Montserrat:200,400,500,600,700" rel="stylesheet")
+        link(href="https://fonts.googleapis.com/css?family=Roboto:200,400,500,600,700" rel="stylesheet")
         link(href="home/libs/ionicons-2.0.1/css/ionicons.min.css" rel="stylesheet")
         link(href="home/style.css" rel="stylesheet")
         title juno
     body
-        include home_header
+        .background
+            .container
+                section.header
+                    .header-nav
+                        .row
+                            ul.header-nav__list.col-lg-3.col-md-3.ml-auto
+                                li.header-nav__item
+                                    a(href="#").header-nav__link Login
+                    .header-logo
+                        .header-logo__one
+
 

@@ -259,10 +259,15 @@
                 this.personalData.pass = this.encrypt('pass');
                 this.$http.post("http://localhost:2000/auth", this.personalData, {emulateJSON: true}).then( (res) => {
                     this.response = res.data;
-                    this.alert.type = res.data.type;
-                    this.alert.text = res.data.text;
-                    this.alert.enabled = true;
+                    if(res.data.type === 'success'){
+                        this.modal_success_settings.enabled = true;
+                        this.modal_success_settings.text = res.data.text;
+                    }else if(res.data.type === 'failed'){
+                        this.modal_failed_settings.enabled = true;
+                        this.modal_failed_settings.text = res.data.text;
+                    }
                     this.auth.enabled = false;
+                    console.log(res)
                 }, (err) => {
                     console.log(err);
                 });
